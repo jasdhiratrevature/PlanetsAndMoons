@@ -14,7 +14,16 @@ public class UserService {
 
 	public User authenticate(UsernamePasswordAuthentication loginRequestData) {
 		// TODO: implement
-		return dao.getUserByUsername(loginRequestData.getUsername());
+		// return dao.getUserByUsername(loginRequestData.getUsername());
+		User user = dao.getUserByUsername(loginRequestData.getUsername());
+    
+		// Check if the user exists and the provided password matches
+		if (user != null && user.getPassword().equals(loginRequestData.getPassword())) {
+			return user;
+		}
+		
+		// If user doesn't exist or password doesn't match, return null
+		return null;
 	}
 
 	public User register(User registerRequestData) {
