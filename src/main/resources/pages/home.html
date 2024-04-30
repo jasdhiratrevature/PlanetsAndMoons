@@ -133,6 +133,10 @@
                             // Planet created successfully
                             populateCelestialTable();
                         }
+
+                        if (response.status === 500){
+                            alert("Planet already exists")
+                        }
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
                     })

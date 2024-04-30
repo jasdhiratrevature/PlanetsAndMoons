@@ -10,7 +10,7 @@ create table users(
 );
 
 create table planets(
-	id INTEGER PRIMARY KEY AUTOINCREMENT,,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name varchar(20),
 	ownerId int references users(id)
 );

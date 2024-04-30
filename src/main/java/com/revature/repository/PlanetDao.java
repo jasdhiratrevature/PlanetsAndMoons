@@ -10,24 +10,26 @@ import java.sql.*;
 
 public class PlanetDao {
     
-    public List<Planet> getAllPlanets() {
+    public List<Planet> getAllPlanets(int ownerId) {
 		// TODO: implement
 		List<Planet> planets = new ArrayList<>();
+        System.out.println(ownerId);
 
         try (Connection connection = ConnectionUtil.createConnection()) {
-            String sql = "SELECT id, name, ownerId FROM planets";
+            String sql = "SELECT id, name, ownerId FROM planets WHERE ownerId = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, ownerId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
-                int ownerId = rs.getInt("ownerId");
+                int owner_Id = rs.getInt("ownerId");
 
                 Planet planet = new Planet();
                 planet.setId(id);
                 planet.setName(name);
-                planet.setOwnerId(ownerId);
+                planet.setOwnerId(owner_Id);
 
                 planets.add(planet);
             }
@@ -38,14 +40,58 @@ public class PlanetDao {
         return planets;
 	}
 
-	public Planet getPlanetByName(String planetName) {
+	public Planet getPlanetByName(int ownerId, String planetName) {
 		// TODO: implement
-		return null;			
+        try (Connection connection = ConnectionUtil.createConnection()) {
+            String sql = "SELECT id, name, ownerId FROM planets WHERE name = ? AND ownerId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, planetName);
+            ps.setInt(2, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int owner_Id = rs.getInt("ownerId");
+
+                Planet planet = new Planet();
+                planet.setId(id);
+                planet.setName(name);
+                planet.setOwnerId(owner_Id);
+
+                return planet;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving planet by name: " + e.getMessage());
+        }
+        return null;			
 	}
 
-	public Planet getPlanetById(int planetId) {
+	public Planet getPlanetById(int ownerId,int planetId) {
 		// TODO: implement
-		return null;
+		try (Connection connection = ConnectionUtil.createConnection()) {
+            String sql = "SELECT id, name, ownerId FROM planets WHERE id = ?, ownerId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, planetId);
+            ps.setInt(2, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int owner_Id = rs.getInt("ownerId");
+
+                Planet planet = new Planet();
+                planet.setId(id);
+                planet.setName(name);
+                planet.setOwnerId(owner_Id);
+
+                return planet;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving planet by id: " + e.getMessage());
+        }
+        return null;
 	}
 
 	public Planet createPlanet(Planet p) {
@@ -69,8 +115,18 @@ public class PlanetDao {
         }
 	}
 
-	public boolean deletePlanetById(int planetId) {
+	public boolean deletePlanetById(int ownerId,int planetId) {
 		// TODO: implement
-		return false;
+        try (Connection connection = ConnectionUtil.createConnection()) {
+            String sql = "DELETE FROM planets WHERE id = ? AND ownerId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, planetId);
+            ps.setInt(2, ownerId);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Error deleting planet by id: " + e.getMessage());
+            return false;
+        }
 	}
 }
