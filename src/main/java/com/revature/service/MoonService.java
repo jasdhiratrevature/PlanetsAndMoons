@@ -30,7 +30,7 @@ public class MoonService {
 
 	public Moon createMoon(Moon m) {
 		// TODO implement
-		return null;
+		return dao.createMoon(m);
 	}
 
 	public boolean deleteMoonById(int moonId) {
