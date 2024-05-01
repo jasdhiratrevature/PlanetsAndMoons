@@ -60,7 +60,7 @@ public class PlanetDao {
                 return planet;
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving planet by name: " + e.getMessage());
+            System.out.println("Error retrieving planet by name: " + e.getMessage());
         }
         return null;			
 	}
@@ -87,7 +87,7 @@ public class PlanetDao {
                 return planet;
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving planet by id: " + e.getMessage());
+            System.out.println("Error retrieving planet by id: " + e.getMessage());
         }
         return null;
 	}
@@ -116,14 +116,27 @@ public class PlanetDao {
 	public boolean deletePlanetById(int ownerId,int planetId) {
 		// TODO: implement
         try (Connection connection = ConnectionUtil.createConnection()) {
-            String sql = "DELETE FROM planets WHERE id = ? AND ownerId = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, planetId);
-            ps.setInt(2, ownerId);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            // Construct SQL query to delete associated moons
+            String deleteMoonsSql = "DELETE FROM moons WHERE myPlanetId = ?";
+            PreparedStatement deleteMoonsPs = connection.prepareStatement(deleteMoonsSql);
+            deleteMoonsPs.setInt(1, planetId);
+            
+            // Execute delete statement for associated moons
+            int moonsRowsAffected = deleteMoonsPs.executeUpdate();
+            
+            // Construct SQL query to delete the planet
+            String deletePlanetSql = "DELETE FROM planets WHERE id = ? AND ownerId = ?";
+            PreparedStatement deletePlanetPs = connection.prepareStatement(deletePlanetSql);
+            deletePlanetPs.setInt(1, planetId);
+            deletePlanetPs.setInt(2, ownerId);
+            
+            // Execute delete statement for the planet
+            int planetRowsAffected = deletePlanetPs.executeUpdate();
+            
+            // Check if both delete statements were successful
+            return moonsRowsAffected > 0 && planetRowsAffected > 0;
         } catch (SQLException e) {
-            System.err.println("Error deleting planet by id: " + e.getMessage());
+            System.out.println("Error deleting planet by id: " + e.getMessage());
             return false;
         }
 	}

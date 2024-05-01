@@ -5,23 +5,14 @@ import java.util.List;
 
 import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
-import com.revature.models.Planet;
 import com.revature.repository.MoonDao;
-import com.revature.repository.PlanetDao;
-import com.revature.service.PlanetService;
 
 public class MoonService {
 
 	private MoonDao dao;
-	private PlanetDao planetDao;
 
 	public MoonService(MoonDao dao) {
 		this.dao = dao;
-	}
-
-	public MoonService(MoonDao dao, PlanetDao planetDao) {
-		this.dao = dao;
-		this.planetDao = planetDao;
 	}
 
 	public List<Moon> getAllMoons(int ownerId) {
@@ -50,6 +41,7 @@ public class MoonService {
 		if (existingMoon != null) {
 			throw new MoonFailException("Moon with name '" + m.getName() + "' already exists");
 		} 
+		
 		// If the moon name is valid and it doesn't already exist, proceed to create the moon
 		return dao.createMoon(m);
 		
