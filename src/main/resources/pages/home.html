@@ -63,7 +63,7 @@
     </div>
 
     <span id="deleteContainer">
-        <input type="text" id="deleteInput" placeholder="name for celestial body to be deleted">
+        <input type="text" id="deleteInput" placeholder="Enter ID for celestial body to be deleted">
         <button id="deleteButton" onclick="deleteCelestial()">Delete</button>
     </span>
     <span id="searchPlanetContainer">
@@ -154,7 +154,7 @@
                 orbitedPlanetInput.type = 'text';
                 orbitedPlanetInput.id = 'orbitedPlanetInput';
                 orbitedPlanetInput.name = 'Orbited Planet';
-                orbitedPlanetInput.placeholder = 'Enter Orbited Planet';
+                orbitedPlanetInput.placeholder = 'Enter Orbited Planet ID';
                 inputContainer.appendChild(orbitedPlanetInput);
 
                 let submitButton = document.createElement('button');
