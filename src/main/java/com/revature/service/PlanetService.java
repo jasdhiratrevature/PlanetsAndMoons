@@ -2,6 +2,7 @@ package com.revature.service;
 
 import java.util.List;
 
+import com.revature.exceptions.MoonFailException;
 import com.revature.exceptions.PlanetFailException;
 import com.revature.models.Planet;
 import com.revature.repository.PlanetDao;
@@ -32,17 +33,19 @@ public class PlanetService {
 	public Planet createPlanet(int ownerId, Planet planet) {
 		// TODO Auto-generated method stub
 
-		 // Check if a planet with the same name already exists for the given ownerId
-		 Planet existingPlanet = dao.getPlanetByName(ownerId, planet.getName());
-		 if (existingPlanet != null) {
-			 throw new PlanetFailException("Planet with name '" + planet.getName() + "' already exists for Owner ID " + ownerId);
-		 } else {
-			 // Set the ownerId to the planet
-			 planet.setOwnerId(ownerId);
-			 
-			 // Create the planet
-			 return dao.createPlanet(planet);
-		 }
+		// Check if the moon name exceeds 30 characters
+		 if (planet.getName().length() > 30) {
+			throw new PlanetFailException("Planet name cannot exceed 30 characters");
+		}
+
+		// Check if a planet with the same name already exists for the given ownerId
+		Planet existingPlanet = dao.getPlanetByName(ownerId, planet.getName());
+		if (existingPlanet != null) {
+			throw new PlanetFailException("Planet with name '" + planet.getName() + "' already exists for Owner ID " + ownerId);
+		} 
+
+		planet.setOwnerId(ownerId); // Set the ownerId to the planet
+		return dao.createPlanet(planet);
 	}
 
 	public boolean deletePlanetById(int ownerId, int planetId) {

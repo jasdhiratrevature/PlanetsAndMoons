@@ -3,6 +3,7 @@ package com.revature.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
 import com.revature.models.Planet;
 import com.revature.repository.MoonDao;
@@ -39,8 +40,19 @@ public class MoonService {
 	}
 
 	public Moon createMoon(Moon m) {
-		// TODO implement
+		 // Check if the moon name exceeds 30 characters
+		 if (m.getName().length() > 30) {
+			throw new MoonFailException("Moon name cannot exceed 30 characters");
+		}
+
+		// Check if a moon with the same name already exists
+		Moon existingMoon = dao.getMoonByName(m.getName());
+		if (existingMoon != null) {
+			throw new MoonFailException("Moon with name '" + m.getName() + "' already exists");
+		} 
+		// If the moon name is valid and it doesn't already exist, proceed to create the moon
 		return dao.createMoon(m);
+		
 	}
 
 	public boolean deleteMoonById(int moonId) {

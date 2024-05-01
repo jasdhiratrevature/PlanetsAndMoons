@@ -135,7 +135,7 @@
                         }
 
                         if (response.status === 500){
-                            alert("Planet already exists")
+                            alert("There was an error adding planet. Planet might already exist or planet name is over 30 characters ")
                         }
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
@@ -181,6 +181,9 @@
                         if (response.status === 201) {
                             // moon created successfully
                             populateCelestialTable();
+                        }
+                        if (response.status === 500){
+                            alert("There was an error adding moon. Moon might already exist or moon name is over 30 characters ")
                         }
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
