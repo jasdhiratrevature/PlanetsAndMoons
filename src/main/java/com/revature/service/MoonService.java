@@ -1,21 +1,31 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.models.Moon;
+import com.revature.models.Planet;
 import com.revature.repository.MoonDao;
+import com.revature.repository.PlanetDao;
+import com.revature.service.PlanetService;
 
 public class MoonService {
 
 	private MoonDao dao;
+	private PlanetDao planetDao;
 
 	public MoonService(MoonDao dao) {
 		this.dao = dao;
 	}
 
-	public List<Moon> getAllMoons() {
+	public MoonService(MoonDao dao, PlanetDao planetDao) {
+		this.dao = dao;
+		this.planetDao = planetDao;
+	}
+
+	public List<Moon> getAllMoons(int ownerId) {
 		// TODO implement
-		return null;
+		return dao.getAllMoons(ownerId);
 	}
 
 	public Moon getMoonByName(int myPlanetId, String moonName) {

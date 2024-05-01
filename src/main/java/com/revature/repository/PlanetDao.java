@@ -13,8 +13,6 @@ public class PlanetDao {
     public List<Planet> getAllPlanets(int ownerId) {
 		// TODO: implement
 		List<Planet> planets = new ArrayList<>();
-        System.out.println(ownerId);
-
         try (Connection connection = ConnectionUtil.createConnection()) {
             String sql = "SELECT id, name, ownerId FROM planets WHERE ownerId = ?";
             PreparedStatement ps = connection.prepareStatement(sql);

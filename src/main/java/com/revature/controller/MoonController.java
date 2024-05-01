@@ -17,7 +17,8 @@ public class MoonController {
 	}
 
 	public void getAllMoons(Context ctx) {
-		ctx.json(moonService.getAllMoons()).status(200);
+		User u = ctx.sessionAttribute("user");
+		ctx.json(moonService.getAllMoons(u.getId())).status(200);
 	}
 
 	public void getMoonByName(Context ctx) {

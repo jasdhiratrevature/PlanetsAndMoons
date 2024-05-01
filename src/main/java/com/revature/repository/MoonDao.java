@@ -10,14 +10,35 @@ import java.util.List;
 
 import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
+import com.revature.models.Planet;
 import com.revature.utilities.ConnectionUtil;
 
 public class MoonDao {
     
-    public List<Moon> getAllMoons() {
+    public List<Moon> getAllMoons(int ownerId) {
 		// TODO: implement
-		return null;
+		List<Moon> moons = new ArrayList<>();
+    try (Connection connection = ConnectionUtil.createConnection()) {
+        String sql = "SELECT m.* FROM moons m " +
+                     "JOIN planets p ON m.myPlanetId = p.id " +
+                     "WHERE p.ownerId = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, ownerId);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            Moon moon = new Moon();
+            moon.setId(rs.getInt("id"));
+            moon.setName(rs.getString("name"));
+            moon.setMyPlanetId(rs.getInt("myPlanetId"));
+            moons.add(moon);
+        }
+    } catch (SQLException e) {
+        System.err.println("Error retrieving moons: " + e.getMessage());
+    }
+    return moons;
 	}
+
+
 
 	public Moon getMoonByName(String moonName) {
 		// TODO: implement
