@@ -30,12 +30,12 @@ public class MoonService {
 
 	public Moon getMoonByName(int myPlanetId, String moonName) {
 		// TODO implement
-		return null;
+		return dao.getMoonByName(moonName);
 	}
 
 	public Moon getMoonById(int myPlanetId, int moonId) {
 		// TODO Aimplement
-		return null;
+		return dao.getMoonById(moonId);
 	}
 
 	public Moon createMoon(Moon m) {
@@ -44,11 +44,11 @@ public class MoonService {
 	}
 
 	public boolean deleteMoonById(int moonId) {
-		return false;
+		return dao.deleteMoonById(moonId);
 	}
 
 	public List<Moon> getMoonsFromPlanet(int myPlanetId) {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.getMoonsFromPlanet(myPlanetId);
 	}
 }
