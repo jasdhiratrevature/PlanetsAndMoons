@@ -20,12 +20,33 @@ public class PlanetController {
 	}
 
 	public void getPlanetByName(Context ctx) {
+		// User u = ctx.sessionAttribute("user");
+		// String planetName = ctx.pathParam("name");
+		
+		// Planet p = planetService.getPlanetByName(u.getId(), planetName);
+		
+		// ctx.json(p).status(200);
 		User u = ctx.sessionAttribute("user");
 		String planetName = ctx.pathParam("name");
+		System.out.println("This name is " + planetName);
+    
+		// Check if the planetName is null or empty
+		if (planetName == null || planetName.isEmpty()) {
+			ctx.status(400).result("Planet name cannot be empty");
+			return;
+		}
 		
-		Planet p = planetService.getPlanetByName(u.getId(), planetName);
+		// Retrieve the planet from the database or wherever you store the data
+		Planet planet = planetService.getPlanetByName(u.getId(), planetName);
 		
-		ctx.json(p).status(200);
+		// Check if the planet exists
+		if (planet == null) {
+			ctx.status(404).result("Planet not found");
+			return;
+		}
+		
+		// Return the planet details
+		ctx.json(planet).status(200);
 	}
 
 	public void getPlanetByID(Context ctx) {
@@ -47,10 +68,21 @@ public class PlanetController {
 	}
 
 	public void deletePlanet(Context ctx) {
+		// User u = ctx.sessionAttribute("user");
+		// int planetId = ctx.pathParamAsClass("id", Integer.class).get();
+		
+		// planetService.deletePlanetById(u.getId(), planetId);
+		// ctx.json("Planet successfully deleted").status(202);
+
 		User u = ctx.sessionAttribute("user");
 		int planetId = ctx.pathParamAsClass("id", Integer.class).get();
 		
-		planetService.deletePlanetById(u.getId(), planetId);
-		ctx.json("Planet successfully deleted").status(202);
+		boolean deleted = planetService.deletePlanetById(u.getId(), planetId);
+		
+		if (deleted) {
+			ctx.json("Planet successfully deleted").status(202);
+		} else {
+			ctx.result("Failed to delete planet").status(500); 
+		}
 	}
 }

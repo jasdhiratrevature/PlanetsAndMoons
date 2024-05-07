@@ -54,9 +54,18 @@
     document.getElementById('loginForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission behavior
 
-        const username = document.getElementById('usernameInput').value;
-        const password = document.getElementById('passwordInput').value;
+        // Get the username and password input values
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
 
+        // Trim and convert to lowercase if there are leading or trailing spaces
+        const username = usernameInput.value.trim().toLowerCase();
+        const password = passwordInput.value.trim().toLowerCase();
+
+        // Update the input fields with the trimmed and lowercase values
+        usernameInput.value = username;
+        passwordInput.value = password;
+        
         const loginData = {
             username: username,
             password: password

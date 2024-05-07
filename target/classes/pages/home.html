@@ -136,7 +136,7 @@
                         }
 
                         if (response.status === 500){
-                            alert("There was an error adding planet. Planet might already exist or planet name is over 30 characters ")
+                            alert("There was an error adding planet")
                         }
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
@@ -186,7 +186,7 @@
                             orbitedPlanetInput.value = '';
                         }
                         if (response.status === 500){
-                            alert("There was an error adding moon. Moon might already exist or moon name is over 30 characters ")
+                            alert("There was an error adding moon")
                         }
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
@@ -251,9 +251,16 @@
             });
             if (response.status === 202) {
                 populateCelestialTable();
+                if (selectedOption === 'moon'){
+                    alert(`Delete moon with ID ${id}`);
+                } 
+                if (selectedOption === 'planet'){
+                    alert(`Delete planet with ID ${id}`);
+                }
+                console.log(response);
                 document.getElementById('deleteInput').value = '';
             } else {
-                console.error(`Failed to delete ${selectedOption} with name ${name}`);
+                alert(`Failed to delete ${selectedOption} with ID ${id}`);
             }
         }
 
@@ -282,12 +289,16 @@
                 return;
             }
 
+            // Convert the input to lowercase
+            input = input.toLowerCase();
+
             let url;
             if (!isNaN(input)) {
                 // If input is a number, search by id
                 url = `http://localhost:7000/api/planet/id/${input}`;
             } else {
                 // If input is a string, search by name
+                console.log(input);
                 url = `http://localhost:7000/api/planet/name/${input}`;
             }
 
@@ -345,6 +356,9 @@
                 return;
             }
 
+            // Convert the input to lowercase
+            input = input.toLowerCase();
+ 
             let url;
             if (!isNaN(input)) {
                 // If input is a number, search by id

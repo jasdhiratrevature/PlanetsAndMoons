@@ -48,11 +48,20 @@ public class MoonController {
 	}
 
 	public void deleteMoon(Context ctx) {
+		// int moonId = ctx.pathParamAsClass("id", Integer.class).get();
+		
+		// moonService.deleteMoonById(moonId);
+		
+		// ctx.json("Moon successfully deleted").status(202);
 		int moonId = ctx.pathParamAsClass("id", Integer.class).get();
+    
+		boolean deleted = moonService.deleteMoonById(moonId);
 		
-		moonService.deleteMoonById(moonId);
-		
-		ctx.json("Moon successfully deleted").status(202);
+		if (deleted) {
+			ctx.json("Moon successfully deleted").status(202);
+		} else {
+			ctx.result("Failed to delete moon").status(500); 
+		}
 	}
 	
 	public void getPlanetMoons(Context ctx) {

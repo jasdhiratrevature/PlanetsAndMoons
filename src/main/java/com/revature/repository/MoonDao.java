@@ -8,9 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
-import com.revature.models.Planet;
 import com.revature.utilities.ConnectionUtil;
 
 public class MoonDao {
@@ -53,6 +51,10 @@ public class MoonDao {
                 moon.setName(rs.getString("name"));
                 moon.setMyPlanetId(rs.getInt("myPlanetId"));
                 return moon;
+            } else {
+                // No moon found with the specified ID
+                System.out.println("Moon not found with Name: " + moonName);
+                return null;
             }
         } catch (SQLException e) {
             System.err.println("Error retrieving moon by name: " + e.getMessage());
@@ -73,6 +75,10 @@ public class MoonDao {
                 moon.setName(rs.getString("name"));
                 moon.setMyPlanetId(rs.getInt("myPlanetId"));
                 return moon;
+            } else {
+                // No moon found with the specified ID
+                System.out.println("Moon not found with ID: " + moonId);
+                return null;
             }
         } catch (SQLException e) {
             System.err.println("Error retrieving moon by ID: " + e.getMessage());
@@ -103,12 +109,16 @@ public class MoonDao {
 
 	public boolean deleteMoonById(int moonId) {
 		// TODO: implement
-		try (Connection connection = ConnectionUtil.createConnection()) {
-            String sql = "DELETE FROM moons WHERE id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, moonId);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+        
+        try (Connection connection = ConnectionUtil.createConnection()) {
+            if (getMoonById(moonId) != null){
+                String sql = "DELETE FROM moons WHERE id = ?";
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setInt(1, moonId);
+                int rowsAffected = ps.executeUpdate();
+                return rowsAffected > 0;
+            }
+            return false;
         } catch (SQLException e) {
             System.err.println("Error deleting moon by ID: " + e.getMessage());
             return false;
