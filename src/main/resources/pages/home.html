@@ -132,6 +132,7 @@
                         if (response.status === 201) {
                             // Planet created successfully
                             populateCelestialTable();
+                            planetNameInput.value = '';
                         }
 
                         if (response.status === 500){
@@ -181,6 +182,8 @@
                         if (response.status === 201) {
                             // moon created successfully
                             populateCelestialTable();
+                            moonNameInput.value = ''; // Reset moon name input
+                            orbitedPlanetInput.value = '';
                         }
                         if (response.status === 500){
                             alert("There was an error adding moon. Moon might already exist or moon name is over 30 characters ")
@@ -188,7 +191,6 @@
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
                     })                });
-                inputContainer.appendChild(submitButton);
             }
         });
 
@@ -248,6 +250,7 @@
             });
             if (response.status === 202) {
                 populateCelestialTable();
+                document.getElementById('deleteInput').value = '';
             } else {
                 console.error(`Failed to delete ${selectedOption} with name ${name}`);
             }
