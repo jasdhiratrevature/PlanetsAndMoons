@@ -68,11 +68,11 @@
     </span>
     <span id="searchPlanetContainer">
         <input type="text" id="searchPlanetInput" placeholder="name or id for planet to be found">
-        <button id="searchPlanetButton" onclick="TBD">Search Planet</button>
+        <button id="searchPlanetButton" onclick="searchPlanet()">Search Planet</button>
     </span>
     <span id="searchMoonContainer">
         <input type="text" id="searchMoonInput" placeholder="name or id for moon to be found">
-        <button id="searchMoonButton" onclick="TBD">Search Moon</button>
+        <button id="searchMoonButton" onclick="searchMoon()">Search Moon</button>
     </spa>
 
     <table id="celestialTable">
@@ -191,6 +191,7 @@
                     }).catch(error => {
                         alert("Something went wrong, check the console for details");
                     })                });
+                    inputContainer.appendChild(submitButton);
             }
         });
 
@@ -269,6 +270,132 @@
                 alert('Failed to logout');
             }
         }
+
+        document.getElementById('searchPlanetInput').addEventListener('change', async function() {
+            // Get the value of the search input and trim any leading or trailing spaces
+            let input = this.value.trim();
+            
+            // Check if the input is empty
+            if (!input) {
+                // If input is empty, fetch the whole table
+                await populateCelestialTable();
+                return;
+            }
+
+            let url;
+            if (!isNaN(input)) {
+                // If input is a number, search by id
+                url = `http://localhost:7000/api/planet/id/${input}`;
+            } else {
+                // If input is a string, search by name
+                url = `http://localhost:7000/api/planet/name/${input}`;
+            }
+
+            const response = await fetch(url, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const table = document.getElementById('celestialTable');
+                // Clear existing table content
+                table.innerHTML = '<tr><th>Type</th><th>ID</th><th>Name</th><th>Owner</th></tr>';
+                if (Array.isArray(data) && data.length > 0) {
+                    // If data is an array and has elements, update the table
+                    data.forEach(planet => {
+                        const row = table.insertRow();
+                        const typeCell = row.insertCell(0);
+                        const idCell = row.insertCell(1);
+                        const nameCell = row.insertCell(2);
+                        const ownerCell = row.insertCell(3);
+                        typeCell.textContent = 'planet';
+                        idCell.textContent = planet.id;
+                        nameCell.textContent = planet.name;
+                        ownerCell.textContent = planet.ownerId;
+                    });
+                } else if (!Array.isArray(data) && data) {
+                    // If data is not an array and is truthy (indicating a single object), update the table
+                    const row = table.insertRow();
+                    const typeCell = row.insertCell(0);
+                    const idCell = row.insertCell(1);
+                    const nameCell = row.insertCell(2);
+                    const ownerCell = row.insertCell(3);
+                    typeCell.textContent = 'planet';
+                    idCell.textContent = data.id;
+                    nameCell.textContent = data.name;
+                    ownerCell.textContent = data.ownerId;
+                } else {
+                    // If no planet is found with the provided input
+                    alert('No planet found with the provided input');
+                }
+
+            } else {
+                alert('No planet found.');
+            }
+        })
+
+        document.getElementById('searchMoonInput').addEventListener('change', async function() {
+            // Get the value of the search input and trim any leading or trailing spaces
+            let input = this.value.trim();
+            
+            // Check if the input is empty
+            if (!input) {
+                // If input is empty, fetch the whole table
+                await populateCelestialTable();
+                return;
+            }
+
+            let url;
+            if (!isNaN(input)) {
+                // If input is a number, search by id
+                url = `http://localhost:7000/api/moon/id/${input}`;
+            } else {
+                // If input is a string, search by name
+                url = `http://localhost:7000/api/moon/name/${input}`;
+            }
+
+            const response = await fetch(url, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const table = document.getElementById('celestialTable');
+                // Clear existing table content
+                table.innerHTML = '<tr><th>Type</th><th>ID</th><th>Name</th><th>Owner</th></tr>';
+                if (Array.isArray(data) && data.length > 0) {
+                    // If data is an array and has elements, update the table
+                    data.forEach(moon => {
+                        const row = table.insertRow();
+                        const typeCell = row.insertCell(0);
+                        const idCell = row.insertCell(1);
+                        const nameCell = row.insertCell(2);
+                        const ownerCell = row.insertCell(3);
+                        typeCell.textContent = 'moon';
+                        idCell.textContent = moon.id;
+                        nameCell.textContent = moon.name;
+                        ownerCell.textContent = moon.myPlanetId;
+                    });
+                } else if (!Array.isArray(data) && data) {
+                    // If data is not an array and is truthy (indicating a single object), update the table
+                    const row = table.insertRow();
+                    const typeCell = row.insertCell(0);
+                    const idCell = row.insertCell(1);
+                    const nameCell = row.insertCell(2);
+                    const ownerCell = row.insertCell(3);
+                    typeCell.textContent = 'moon';
+                    idCell.textContent = data.id;
+                    nameCell.textContent = data.name;
+                    ownerCell.textContent = data.myPlanetId;
+                } else {
+                    // If no planet is found with the provided input
+                    alert('No moon found with the provided input');
+                }
+
+            } else {
+                alert('No moon found.');
+            }
+        })
 
     </script>
 </body>

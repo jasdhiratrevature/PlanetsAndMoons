@@ -41,6 +41,7 @@ public class PlanetDao {
 	public Planet getPlanetByName(int ownerId, String planetName) {
 		// TODO: implement
         try (Connection connection = ConnectionUtil.createConnection()) {
+            System.out.println(planetName);
             String sql = "SELECT id, name, ownerId FROM planets WHERE name = ? AND ownerId = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, planetName);
@@ -68,7 +69,7 @@ public class PlanetDao {
 	public Planet getPlanetById(int ownerId,int planetId) {
 		// TODO: implement
 		try (Connection connection = ConnectionUtil.createConnection()) {
-            String sql = "SELECT id, name, ownerId FROM planets WHERE id = ?, ownerId = ?";
+            String sql = "SELECT id, name, ownerId FROM planets WHERE id = ? AND ownerId = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, planetId);
             ps.setInt(2, ownerId);
