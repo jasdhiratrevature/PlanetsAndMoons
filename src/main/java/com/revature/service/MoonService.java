@@ -1,11 +1,9 @@
 package com.revature.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
-import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
 import com.revature.repository.MoonDao;
 

@@ -88,24 +88,40 @@ public class MoonDao {
 
 	public Moon createMoon(Moon m) {
 		// TODO: implement
-		try (Connection connection = ConnectionUtil.createConnection()) {
-			String sql = "INSERT INTO moons (name, myPlanetId) VALUES (?, ?)";
-			PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, m.getName());
-			ps.setInt(2, m.getMyPlanetId());
-			ps.executeUpdate();
-			ResultSet rs = ps.getGeneratedKeys();
-			if (rs.next()) {
-				int generatedId = rs.getInt(1); // Retrieve the auto-generated id
-				m.setId(generatedId); // Set the id to the moon object
-				return m;
-			}
-			return null; // Failed to create moon
-		} catch (SQLException e) {
-			System.out.println("Error creating moon: " + e.getMessage());
-			return null;
-		}
+        try (Connection connection = ConnectionUtil.createConnection()) {
+            // Check if the associated planet exists
+            if (isPlanetExist(connection, m.getMyPlanetId())) {
+                String sql = "INSERT INTO moons (name, myPlanetId) VALUES (?, ?)";
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, m.getName());
+                ps.setInt(2, m.getMyPlanetId());
+                ps.executeUpdate();
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1); // Retrieve the auto-generated id
+                    m.setId(generatedId); // Set the id to the moon object
+                    return m;
+                }
+            } else {
+                System.out.println("Error: Associated planet does not exist.");
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error creating moon: " + e.getMessage());
+        }
+        return null; // Failed to create moon
 	}
+    private boolean isPlanetExist(Connection connection, int planetId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM planets WHERE id = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, planetId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0; // If count > 0, planet exists
+        }
+        return false; // Planet does not exist
+    }
 
 	public boolean deleteMoonById(int moonId) {
 		// TODO: implement
