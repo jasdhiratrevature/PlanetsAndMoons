@@ -35,7 +35,7 @@ public class UserService {
         String username = registerRequestData.getUsername().trim().toLowerCase();
         String password = registerRequestData.getPassword();
 
-        System.out.println("username: " + username + " " + username.isEmpty());
+        System.out.println("username: " + username);
         // Check if username or password is empty
         if (username.isEmpty() || password.isEmpty()) {
             return null;
