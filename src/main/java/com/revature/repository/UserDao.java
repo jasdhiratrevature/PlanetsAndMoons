@@ -48,7 +48,7 @@ public class UserDao {
             return new User();
         } catch (SQLException e) {
             System.out.println(e);
-            return new User();
+            return null;
         }
     }
 

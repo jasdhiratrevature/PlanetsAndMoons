@@ -7,6 +7,7 @@ import com.revature.utilities.ConnectionUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.sqlite.SQLiteException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,12 +48,33 @@ public class UserDaoTest {
         Assertions.assertTrue(actualUser.getId() > 0);
     }
 
-    @DisplayName("GetUserByUserName::Valid__ExistingUser")
+    @DisplayName("RegisterUser::Negative__ExistingUser")
     @Order(2)
+    @Test
+    public void registerUserInvalid() throws SQLException {
+        // Arrange
+        String existingUsername = "testUser";
+        String password = "password";
+        insertTestUser(existingUsername, password);
+
+        UsernamePasswordAuthentication user = new UsernamePasswordAuthentication();
+        user.setUsername(existingUsername);
+        user.setPassword(password);
+
+        // Act
+        User actualUser = userDao.createUser(user);
+
+        // Assert
+        Assertions.assertNull(actualUser, "User should not be created when username already exists");
+    }
+
+    @DisplayName("GetUserByUserName::Valid")
+    @Order(3)
     @Test
     public void getUserByUsernameValid() throws SQLException {
         String existingUsername = "existentUser";
-        insertTestUser(existingUsername);
+        String password = "password";
+        insertTestUser(existingUsername, password);
 
         User foundUser = userDao.getUserByUsername(existingUsername);
 
@@ -62,7 +84,7 @@ public class UserDaoTest {
     }
 
     @DisplayName("GetUserByUserName::Invalid__NonExistingUser")
-    @Order(3)
+    @Order(4)
     @Test
     public void getUserByUsernameInvalid() throws SQLException {
         //Arrange
@@ -74,11 +96,11 @@ public class UserDaoTest {
         Assertions.assertNull(nonExistingUser, "User should be null for non-existing username");
     }
 
-    private void insertTestUser(String username) throws SQLException {
+    private void insertTestUser(String username, String password) throws SQLException {
         String insertQuery = "INSERT INTO users (username, password) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, username);
-            statement.setString(2, "password");
+            statement.setString(2, password);
             statement.executeUpdate();
         }
     }
