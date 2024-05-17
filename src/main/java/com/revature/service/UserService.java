@@ -18,7 +18,7 @@ public class UserService {
 
     public User authenticate(UsernamePasswordAuthentication loginRequestData) {
         // TODO: implement
-        // return dao.getUserByUsername(loginRequestData.getUsername());
+
         User user = dao.getUserByUsername(loginRequestData.getUsername());
 
         // Check if the user exists and the provided password matches
