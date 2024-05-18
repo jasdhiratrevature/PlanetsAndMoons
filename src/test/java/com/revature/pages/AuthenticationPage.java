@@ -1,5 +1,6 @@
 package com.revature.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -24,8 +25,12 @@ public class AuthenticationPage {
     @FindBy(xpath = "//*[@id=\"loginForm\"]/input[@value=\"Login\"]")
     private WebElement loginButton;
 
+    @FindBy(id = "greeting")
+    private WebElement greetingBtn;
+
     public AuthenticationPage(WebDriver driver) {
         this.driver = driver;
+        System.out.println("In Authentication page: " + driver.getCurrentUrl());
         PageFactory.initElements(driver, this);
     }
 
@@ -41,8 +46,17 @@ public class AuthenticationPage {
         registerButton.click();
     }
 
+    public void clickLogin() {
+        loginButton.click();
+    }
+
     public void waitForLoginPageLoad() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.visibilityOf(loginButton));
+    }
+
+    public void waitForHomePageLoad() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOf(greetingBtn));
     }
 }

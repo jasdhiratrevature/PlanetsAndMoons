@@ -35,7 +35,7 @@ Feature: Create New Account
 
 
     #NEGATIVE CASES
-  Scenario Outline: Register - Non-ASCII Username
+  Scenario Outline: Register - Non-ASCII Characters
     When the user enters "<username>" as the username and "<password>" as the password
     And the user clicks on the Register button
     Then an error message should be displayed

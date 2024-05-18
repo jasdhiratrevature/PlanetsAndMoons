@@ -15,7 +15,6 @@ public class DriverUtils {
     public static WebDriver getDriver() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-//        cleanUsersTable();
         return driver;
     }
 

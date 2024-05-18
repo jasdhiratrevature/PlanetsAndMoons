@@ -1,4 +1,4 @@
-package com.revature.selenium.steps.authentication.register;
+package com.revature.selenium.steps.authentication;
 
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
@@ -11,9 +11,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,7 +20,7 @@ import java.time.Duration;
 import static com.revature.selenium.utils.DriverUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RegisterStepDefinitions {
+public class AuthenticationStepDefinitions {
     private WebDriver driver;
     private AuthenticationPage authenticationPage;
     private UserDao userDao;
@@ -51,7 +49,7 @@ public class RegisterStepDefinitions {
 
     @When("the user enters {string} as the username and {string} as the password")
     public void enterCredentials(String username, String password) {
-        System.out.println(username);
+        System.out.println("Enter Credentials: " + username);
         authenticationPage.enterUsername(username);
         authenticationPage.enterPassword(password);
     }
@@ -73,7 +71,7 @@ public class RegisterStepDefinitions {
     public void errorAlertDisplayed() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
-        assertTrue(alertText.contains("Account creation failed"), "Error alert not displayed");
+        assertTrue(alertText.contains("failed"), "Error alert not displayed");
         driver.switchTo().alert().accept();
     }
 
@@ -90,5 +88,39 @@ public class RegisterStepDefinitions {
         userDao = new UserDao();
         User existingUser = userDao.getUserByUsername(username);
         assertNotNull(existingUser);
+    }
+
+
+    @Given("User is on Login page")
+    public void userIsOnLoginPage() {
+        driver.get("http://localhost:7000/webpage/login");
+        System.out.println("On login page");
+        assertTrue(driver.getCurrentUrl().contains("http://localhost:7000/webpage/login"), "User is not on the Login page");
+    }
+
+    @Given("the user has an active an account with {string} and {string}")
+    public void theUserHasAnActiveAnAccountWithAnd(String username, String password) {
+        UsernamePasswordAuthentication user = new UsernamePasswordAuthentication();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        userDao = new UserDao();
+        userDao.createUser(user);
+        User existingUser = userDao.getUserByUsername(username);
+        assertNotNull(existingUser);
+    }
+
+
+    @And("the user clicks on the Login button")
+    public void theUserClicksOnTheLoginButton() {
+        authenticationPage.clickLogin();
+    }
+
+    @Then("the user is directed to Home page")
+    public void theUserIsDirectedToHomePage() {
+        authenticationPage.waitForHomePageLoad();
+        String pageTitle = driver.getTitle();
+        System.out.println("pageTitle");
+        assertEquals("Home", pageTitle, "User is not directed to the Home page");
     }
 }
