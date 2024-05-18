@@ -14,7 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-public class UserDaoTest {
+public class
+
+UserDaoTest {
     private Connection connection;
     private UserDao userDao;
 
