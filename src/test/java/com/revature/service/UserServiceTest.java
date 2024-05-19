@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@TestMethodOrder(MethodOrderer.DisplayName.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserServiceTest {
 
     @Mock
@@ -26,7 +26,7 @@ public class UserServiceTest {
     UserService userService;
 
     @ParameterizedTest
-    @DisplayName("Register::Valid-LowerCase")
+    @DisplayName("Register::Valid - LowerCase")
     @CsvSource({
             "user, pass",
             "user123, pass123"
@@ -54,7 +54,7 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Valid-UpperCase")
+    @DisplayName("Register::Valid - UpperCase")
     @CsvSource({
             "USER, pass",
             "USER123, PASS123"
@@ -81,7 +81,7 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Valid-TrailingSpace")
+    @DisplayName("Register::Valid - TrailingSpace")
     @CsvSource({
             "user  , pass",
             "  user123, Pass123"
@@ -108,7 +108,7 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Invalid--EmptyField")
+    @DisplayName("Register::Invalid - EmptyField")
     @CsvSource({
             "'', password",
             "user, '",
@@ -130,7 +130,7 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Invalid--DuplicateUsername")
+    @DisplayName("Register::Invalid - DuplicateUsername")
     @CsvSource({
             "user, pass123",
             "user2, pass123"
@@ -158,7 +158,7 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Invalid--FieldsTooLong")
+    @DisplayName("Register::Invalid - FieldsTooLong")
     @CsvSource({
             "thisusernameisover30characterlong, pass123",
             "user, thisusernameisover31characterlong"
@@ -179,10 +179,10 @@ public class UserServiceTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Register::Invalid--SQLInjection")
+    @DisplayName("Register::Invalid - SQLInjection")
     @CsvSource({
             "Robert'; DROP TABLE users;--, pass123",
-            "user, Robert'; DROP TABLE users;--"
+            "user, Robert'; DROP TABLE users;-- "
     })
     @Order(7)
     public void registerInvalidSQLInjection(String uName, String pwd) {

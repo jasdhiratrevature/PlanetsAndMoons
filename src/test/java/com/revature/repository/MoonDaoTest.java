@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 import java.sql.*;
 
-@TestMethodOrder(MethodOrderer.DisplayName.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MoonDaoTest {
     private Connection connection;
     private MoonDao moonDao;
