@@ -29,11 +29,11 @@ public class MoonServiceTest {
     @BeforeEach
     public void setUp() {
         moon = new Moon();
-        moon.setName("Moon");
+        moon.setName("moon");
         moon.setMyPlanetId(1);
         planet = new Planet();
         planet.setId(1);
-        planet.setName("Earth");
+        planet.setName("earth");
         planet.setOwnerId(1);
     }
 
@@ -299,5 +299,239 @@ public class MoonServiceTest {
 
         // Assert
         Assertions.assertNull(createdMoon);
+    }
+
+    @Test
+    @DisplayName("Remove Moon::Valid")
+    @Order(17)
+    public void testDeleteMoonValid() {
+        // Arrange
+        int moonId = 1;
+
+        Mockito.when(moonDao.deleteMoonById(moonId)).thenReturn(true);
+
+        // Act
+        boolean deletionResult = moonService.deleteMoonById(moonId);
+
+        // Assert
+        Assertions.assertTrue(deletionResult);
+    }
+
+    @Test
+    @DisplayName("Remove Moon::Invalid - Moon Name Instead of ID")
+    @Order(18)
+    public void testDeleteMoonWithMoonName() {
+        // Act
+        boolean deletionResult = moonService.deleteMoonById(-1);
+
+        // Assert
+        Assertions.assertFalse(deletionResult);
+    }
+
+    @Test
+    @DisplayName("Remove Moon::Invalid - Empty ID")
+    @Order(19)
+    public void testDeleteMoonWithEmptyId() {
+        // Arrange
+        int moonId = 0;
+
+        // Act
+        boolean deletionResult = moonService.deleteMoonById(moonId);
+
+        // Assert
+        Assertions.assertFalse(deletionResult);
+    }
+
+    @Test
+    @DisplayName("Remove Moon::Invalid - Invalid ID")
+    @Order(20)
+    public void testDeleteMoonWithInvalidId() {
+        // Arrange
+        int invalidMoonId = 999;
+
+        // Act
+        boolean deletionResult = moonService.deleteMoonById(invalidMoonId);
+
+        // Assert
+        Assertions.assertFalse(deletionResult);
+    }
+
+    @Test
+    @DisplayName("Remove Moon::Invalid - Unauthorized")
+    @Order(21)
+    public void testDeleteMoonUnauthorized() {
+        // Arrange
+        int unauthorizedPlanetId = 0;
+        moon.setMyPlanetId(unauthorizedPlanetId);
+
+        // Act
+        boolean deletionResult = moonService.deleteMoonById(1);
+
+        // Assert
+        Assertions.assertFalse(deletionResult);
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - Name")
+    @Order(22)
+    public void testGetMoonByName() {
+        // Arrange
+        int planetId = 1;
+        String testMoonName = "Moon";
+        Mockito.when(moonDao.getMoonByName("moon")).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, testMoonName);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+        Assertions.assertEquals("moon", foundMoon.getName());
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - ID")
+    @Order(23)
+    public void testGetMoonById() {
+        // Arrange
+        int moonId = 1;
+        Mockito.when(moonDao.getMoonById(moonId)).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonById(1, moonId);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - Name with Uppercase")
+    @Order(24)
+    public void testGetMoonByNameWithUppercase() {
+        // Arrange
+        int planetId = 1;
+        String moonName = "MOON";
+        moon.setName("moon");
+        Mockito.when(moonDao.getMoonByName("moon")).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, moonName);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+        Assertions.assertEquals("moon", foundMoon.getName());
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - Name with Special Characters")
+    @Order(25)
+    public void testGetMoonByNameWithSpecialCharacters() {
+        // Arrange
+        int planetId = 1;
+        String moonName = "Moon!@#";
+        moon.setName("moon!@#");
+        Mockito.when(moonDao.getMoonByName("moon!@#")).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, moonName);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+        Assertions.assertEquals("moon!@#", foundMoon.getName());
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - Name with Numbers")
+    @Order(26)
+    public void testGetMoonByNameWithNumbers() {
+        // Arrange
+        int planetId = 1;
+        String moonName = "Moon123";
+        moon.setName("moon123");
+        Mockito.when(moonDao.getMoonByName("moon123")).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, moonName);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+        Assertions.assertEquals("moon123", foundMoon.getName());
+    }
+
+    @Test
+    @DisplayName("Search Moon::Valid - Name with Leading and Trailing Spaces")
+    @Order(27)
+    public void testGetMoonByNameWithLeadingAndTrailingSpaces() {
+        // Arrange
+        int planetId = 1;
+        String moonName = "  Moon  ";
+        Mockito.when(moonDao.getMoonByName("moon")).thenReturn(moon);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, moonName);
+
+        // Assert
+        Assertions.assertNotNull(foundMoon);
+        Assertions.assertEquals("moon", foundMoon.getName());
+    }
+
+    @Test
+    @DisplayName("Search Moon::Invalid - Non-Existent Name")
+    @Order(28)
+    public void testGetMoonByNonExistentName() {
+        // Arrange
+        int planetId = 1;
+        String nonExistentMoonName = "nonexistentmoon";
+        Mockito.when(moonDao.getMoonByName(nonExistentMoonName)).thenReturn(null);
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, nonExistentMoonName);
+
+        // Assert
+        Assertions.assertNull(foundMoon);
+    }
+
+    @Test
+    @DisplayName("Search Moon::Invalid - Empty Name")
+    @Order(29)
+    public void testGetMoonByEmptyName() {
+        // Arrange
+        int planetId = 1;
+        String emptyMoonName = "";
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, emptyMoonName);
+
+        // Assert
+        Assertions.assertNull(foundMoon);
+    }
+
+    @Test
+    @DisplayName("Search Moon::Invalid - Name Containing SQL Injection Characters")
+    @Order(30)
+    public void testGetMoonByNameWithSQLInjection() {
+        // Arrange
+        int planetId = 1;
+        String moonName = "Moon; DROP TABLE moons;";
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(planetId, moonName);
+
+        // Assert
+        Assertions.assertNull(foundMoon);
+    }
+
+    @Test
+    @DisplayName("Search Moon::Invalid - Unauthorized")
+    @Order(31)
+    public void testGetMoonUnauthorized() {
+        // Arrange
+        int unauthorizedPlanetId = 0;
+        String moonName = "Moon";
+
+        // Act
+        Moon foundMoon = moonService.getMoonByName(unauthorizedPlanetId, moonName);
+
+        // Assert
+        Assertions.assertNull(foundMoon);
     }
 }
