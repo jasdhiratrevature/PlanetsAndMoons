@@ -126,7 +126,6 @@ public class PlanetDao {
             Planet existingPlanet = getPlanetById(ownerId, planetId);
             System.out.println("exisiting planet " + existingPlanet);
             if (existingPlanet != null) {
-                System.out.println("inside delete");
                 // Construct SQL query to delete associated moons if present
                 String deleteMoonsSql = "DELETE FROM moons WHERE myPlanetId = ?";
                 PreparedStatement deleteMoonsPs = connection.prepareStatement(deleteMoonsSql);
