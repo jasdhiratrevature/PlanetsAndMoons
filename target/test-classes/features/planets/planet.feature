@@ -5,9 +5,38 @@ Feature: Add Planet
     And the user is logged in
     And the user is on the home page
 
-  Scenario: Add Planet - Valid Cases
-    Given the planet name "earth" does not already exist
+  Scenario Outline: Add Planet - Valid
+    Given the planet name <planetName> does not already exist
+    And the Planet option is selected in the location select
+    When the user enters <planetName> in the planet input
+    And clicks the submit planet button
+    Then the planet name <planetName> should be added successfully to the Celestial Table
+
+    Examples:
+      | planetName   |
+      | "earth"      |
+      | "Jupiter"    |
+      | "SATURN"     |
+      | "  Venus  "  |
+      | "MARS123"    |
+      | "alpha@beta" |
+
+  Scenario Outline: Add Planet - Invalid
+    Given the Planet option is selected in the location select
+    When the user enters <planetName> in the planet input
+    And clicks the submit planet button
+    Then the alert should be displayed for Planet Adding Error
+
+    Examples: Negative Cases
+      | planetName                                      |
+      | ""                                              |
+      | "AstroAdventureWonderlandWonderlandWonderland " |
+      | "测试"                                            |
+      | "earth; DROP TABLE planets;"                    |
+
+  Scenario: Add Planet - Planet Already Exists
+    Given the planet name "earth" already exists
     And the Planet option is selected in the location select
     When the user enters "earth" in the planet input
     And clicks the submit planet button
-    Then the planet name "earth" should be added successfully to the Celestial Table
+    Then  the alert should be displayed for Planet Adding Error

@@ -49,7 +49,6 @@ public class AuthenticationStepDefinitions {
 
     @When("the user enters {string} as the username and {string} as the password")
     public void enterCredentials(String username, String password) {
-        System.out.println("Enter Credentials: " + username);
         authenticationPage.enterUsername(username);
         authenticationPage.enterPassword(password);
     }

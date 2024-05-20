@@ -7,6 +7,7 @@ import com.revature.pages.AuthenticationPage;
 import com.revature.pages.HomePage;
 import com.revature.repository.PlanetDao;
 import com.revature.repository.UserDao;
+import com.revature.service.PlanetService;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeAll;
@@ -16,6 +17,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
@@ -29,6 +32,7 @@ public class PlanetStepDefinitions {
     private AuthenticationPage authenticationPage;
     private UserDao userDao;
     private PlanetDao planetDao;
+    private PlanetService planetService;
     private User testUser;
 
     @Before
@@ -47,6 +51,7 @@ public class PlanetStepDefinitions {
     public static void beforeSetup() {
         cleanDatabaseTable();
     }
+
 
     @Given("the user has an existing account")
     public void theUserHasAnExistingAccount() {
@@ -89,13 +94,13 @@ public class PlanetStepDefinitions {
 
         testUser.setId(Integer.parseInt(ownerId));
         testUser.setUsername(userName);
-        System.out.println("OwnerID: " + ownerId);
     }
 
     @Given("the planet name {string} does not already exist")
     public void thePlanetDoesNotAlreadyExist(String planetName) {
         planetDao = new PlanetDao();
-        assertNull(planetDao.getPlanetByName(testUser.getId(), planetName));
+        planetService = new PlanetService(planetDao);
+        assertNull(planetService.getPlanetByName(testUser.getId(), planetName));
     }
 
     @And("the Planet option is selected in the location select")
@@ -121,10 +126,11 @@ public class PlanetStepDefinitions {
     public void thePlanetShouldBeAddedSuccessfullyToTheCelestialTable(String planetName) throws InterruptedException {
         // Set implicit wait of 3 seconds
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        Thread.sleep(5000);
+        Thread.sleep(1500);
 
         planetDao = new PlanetDao();
-        Planet planet = planetDao.getPlanetByName(testUser.getId(), planetName);
+        planetService = new PlanetService(planetDao);
+        Planet planet = planetService.getPlanetByName(testUser.getId(), planetName);
 
         // Assert that the method returns a planet
         assertNotNull(planet, "Planet should be found by the service");
@@ -136,4 +142,16 @@ public class PlanetStepDefinitions {
         assertTrue(isPlanetInTable, "Planet should be found in the celestial table");
     }
 
+    @Then("the alert should be displayed for Planet Adding Error")
+    public void theAlertShouldBeDisplayedForPlanetAddingError() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("error"), "Error alert not displayed");
+        driver.switchTo().alert().accept();
+    }
+
+    @Given("the planet name {string} already exists")
+    public void thePlanetNameAlreadyExists(String planetName) {
+        assertTrue(homePage.isPlanetInTable(planetName, testUser.getId()));
+    }
 }

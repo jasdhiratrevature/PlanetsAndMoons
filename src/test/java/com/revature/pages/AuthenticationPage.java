@@ -32,7 +32,6 @@ public class AuthenticationPage {
 
     public AuthenticationPage(WebDriver driver) {
         this.driver = driver;
-        System.out.println("In Authentication page: " + driver.getCurrentUrl());
         PageFactory.initElements(driver, this);
     }
 
