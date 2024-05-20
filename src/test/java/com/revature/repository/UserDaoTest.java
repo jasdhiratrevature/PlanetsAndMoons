@@ -2,12 +2,10 @@ package com.revature.repository;
 
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
-import com.revature.repository.UserDao;
 import com.revature.utilities.ConnectionUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.sqlite.SQLiteException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

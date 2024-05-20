@@ -194,7 +194,7 @@ public class UserServiceTest {
 
         // Act
         User actualUser = userService.register(mockUser);
-
+        
         // Assert that no user was created (null) due to SQL pattern
         assertNull(actualUser);
     }

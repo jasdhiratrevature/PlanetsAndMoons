@@ -5,6 +5,7 @@ import com.revature.utilities.ConnectionUtil;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
+import java.util.List;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MoonDaoTest {
@@ -113,6 +114,47 @@ public class MoonDaoTest {
 
         // Assert
         Assertions.assertFalse(deletionResult);
+    }
+
+    @DisplayName("GetAllMoons::Valid")
+    @Order(7)
+    @Test
+    public void getAllMoonsValid() throws SQLException {
+        // Arrange
+        int ownerId = 1;
+        int planetId1 = insertTestPlanet("Earth");
+        int planetId2 = insertTestPlanet("Mars");
+        insertTestMoon(planetId1, "Moon");
+        insertTestMoon(planetId2, "Phobos");
+
+        // Act
+        List<Moon> moons = moonDao.getAllMoons(ownerId);
+
+        // Assert
+        Assertions.assertNotNull(moons);
+        Assertions.assertEquals(2, moons.size());
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Moon".equals(moon.getName())));
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Phobos".equals(moon.getName())));
+    }
+
+
+    @DisplayName("GetMoonsFromPlanet::Valid")
+    @Order(8)
+    @Test
+    public void getMoonsFromPlanetValid() throws SQLException {
+        // Arrange
+        int planetId = insertTestPlanet("Earth");
+        insertTestMoon(planetId, "Moon");
+        insertTestMoon(planetId, "Deimos");
+
+        // Act
+        List<Moon> moons = moonDao.getMoonsFromPlanet(planetId);
+
+        // Assert
+        Assertions.assertNotNull(moons);
+        Assertions.assertEquals(2, moons.size());
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Moon".equals(moon.getName())));
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Deimos".equals(moon.getName())));
     }
 
     private int insertTestPlanet(String planetName) throws SQLException {

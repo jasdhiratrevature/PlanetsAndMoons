@@ -106,6 +106,41 @@ public class PlanetDaoTest {
         Assertions.assertFalse(deletionResult);
     }
 
+    @DisplayName("GetAllPlanets::Valid")
+    @Order(6)
+    @Test
+    public void getAllPlanetsValid() throws SQLException {
+        // Arrange
+        int ownerId1 = 1;
+        int ownerId2 = 2;
+        insertTestPlanet("earth", ownerId1);
+        insertTestPlanet("mars", ownerId1);
+        insertTestPlanet("jupiter", ownerId2); // Planet with a different ownerId
+
+        // Act
+        List<Planet> planets1 = planetDao.getAllPlanets(ownerId1);
+
+        // Assert
+        Assertions.assertNotNull(planets1);
+        Assertions.assertEquals(2, planets1.size());
+        Planet planet1 = planets1.get(0);
+        Assertions.assertEquals("earth", planet1.getName());
+        Assertions.assertEquals(ownerId1, planet1.getOwnerId());
+
+        Planet planet2 = planets1.get(1);
+        Assertions.assertEquals("mars", planet2.getName());
+        Assertions.assertEquals(ownerId1, planet2.getOwnerId());
+
+        // Act
+        List<Planet> planets2 = planetDao.getAllPlanets(ownerId2);
+        // Assert
+        Assertions.assertNotNull(planets2);
+        Assertions.assertEquals(1, planets2.size());
+        Planet planet3 = planets2.get(0);
+        Assertions.assertEquals("jupiter", planet3.getName());
+        Assertions.assertEquals(ownerId2, planet3.getOwnerId());
+    }
+
     private void insertTestPlanet(String planetName, int ownerId) throws SQLException {
         String insertQuery = "INSERT INTO planets (name, ownerId) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {

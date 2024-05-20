@@ -3,6 +3,7 @@ package com.revature.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.exceptions.PlanetFailException;
 import com.revature.models.Planet;
 import com.revature.utilities.ConnectionUtil;
 
@@ -32,9 +33,8 @@ public class PlanetDao {
                 planets.add(planet);
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving planets: " + e.getMessage());
+            throw new PlanetFailException("Error retrieving planets");
         }
-        System.out.println(planets);
         return planets;
     }
 
@@ -57,12 +57,10 @@ public class PlanetDao {
                 planet.setName(name);
                 planet.setOwnerId(owner_Id);
 
-                System.out.println("Planet I found" + planet);
-
                 return planet;
             }
         } catch (SQLException e) {
-            System.out.println("Error retrieving planet by name: " + e.getMessage());
+            throw new PlanetFailException("Error retrieving planets");
         }
         return null;
     }
@@ -92,10 +90,8 @@ public class PlanetDao {
                 return null;
             }
         } catch (SQLException e) {
-            System.out.println("Error retrieving planet by id: " + e.getMessage());
+            throw new PlanetFailException("Error retrieving planets");
         }
-        return null;
-
     }
 
     public Planet createPlanet(Planet p) {
@@ -114,8 +110,7 @@ public class PlanetDao {
             }
             return null; // Failed to create planet
         } catch (SQLException e) {
-            System.out.println("Error creating planet: " + e.getMessage());
-            return null;
+            throw new PlanetFailException("Error creating planets");
         }
     }
 
@@ -153,8 +148,7 @@ public class PlanetDao {
             }
             return false;
         } catch (SQLException e) {
-            System.out.println("Error deleting planet by id: " + e.getMessage());
-            return false;
+            throw new PlanetFailException("Error deleting planet");
         }
     }
 }

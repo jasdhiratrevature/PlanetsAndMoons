@@ -8,39 +8,39 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
 import com.revature.utilities.ConnectionUtil;
 
 public class MoonDao {
-    
+
     public List<Moon> getAllMoons(int ownerId) {
-		// TODO: implement
-		List<Moon> moons = new ArrayList<>();
-    try (Connection connection = ConnectionUtil.createConnection()) {
-        String sql = "SELECT m.* FROM moons m " +
-                     "JOIN planets p ON m.myPlanetId = p.id " +
-                     "WHERE p.ownerId = ?";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, ownerId);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            Moon moon = new Moon();
-            moon.setId(rs.getInt("id"));
-            moon.setName(rs.getString("name"));
-            moon.setMyPlanetId(rs.getInt("myPlanetId"));
-            moons.add(moon);
+        // TODO: implement
+        List<Moon> moons = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.createConnection()) {
+            String sql = "SELECT m.* FROM moons m " +
+                    "JOIN planets p ON m.myPlanetId = p.id " +
+                    "WHERE p.ownerId = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Moon moon = new Moon();
+                moon.setId(rs.getInt("id"));
+                moon.setName(rs.getString("name"));
+                moon.setMyPlanetId(rs.getInt("myPlanetId"));
+                moons.add(moon);
+            }
+        } catch (SQLException e) {
+            throw new MoonFailException("Error retrieving moons: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.err.println("Error retrieving moons: " + e.getMessage());
+        return moons;
     }
-    return moons;
-	}
 
 
-
-	public Moon getMoonByName(String moonName) {
-		// TODO: implement
-		try (Connection connection = ConnectionUtil.createConnection()) {
+    public Moon getMoonByName(String moonName) {
+        // TODO: implement
+        try (Connection connection = ConnectionUtil.createConnection()) {
             String sql = "SELECT * FROM moons WHERE name = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, moonName);
@@ -60,11 +60,11 @@ public class MoonDao {
             System.err.println("Error retrieving moon by name: " + e.getMessage());
         }
         return null;
-	}
+    }
 
-	public Moon getMoonById(int moonId) {
-		// TODO: implement
-		try (Connection connection = ConnectionUtil.createConnection()) {
+    public Moon getMoonById(int moonId) {
+        // TODO: implement
+        try (Connection connection = ConnectionUtil.createConnection()) {
             String sql = "SELECT * FROM moons WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, moonId);
@@ -84,10 +84,10 @@ public class MoonDao {
             System.err.println("Error retrieving moon by ID: " + e.getMessage());
         }
         return null;
-	}
+    }
 
-	public Moon createMoon(Moon m) {
-		// TODO: implement
+    public Moon createMoon(Moon m) {
+        // TODO: implement
         try (Connection connection = ConnectionUtil.createConnection()) {
             // Check if the associated planet exists
             if (isPlanetExist(connection, m.getMyPlanetId())) {
@@ -110,7 +110,8 @@ public class MoonDao {
             System.out.println("Error creating moon: " + e.getMessage());
         }
         return null; // Failed to create moon
-	}
+    }
+
     private boolean isPlanetExist(Connection connection, int planetId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM planets WHERE id = ?";
         PreparedStatement ps = connection.prepareStatement(sql);
@@ -123,11 +124,11 @@ public class MoonDao {
         return false; // Planet does not exist
     }
 
-	public boolean deleteMoonById(int moonId) {
-		// TODO: implement
-        
+    public boolean deleteMoonById(int moonId) {
+        // TODO: implement
+
         try (Connection connection = ConnectionUtil.createConnection()) {
-            if (getMoonById(moonId) != null){
+            if (getMoonById(moonId) != null) {
                 String sql = "DELETE FROM moons WHERE id = ?";
                 PreparedStatement ps = connection.prepareStatement(sql);
                 ps.setInt(1, moonId);
@@ -139,11 +140,11 @@ public class MoonDao {
             System.err.println("Error deleting moon by ID: " + e.getMessage());
             return false;
         }
-	}
+    }
 
-	public List<Moon> getMoonsFromPlanet(int planetId) {
-		// TODO: implement
-		List<Moon> moons = new ArrayList<>();
+    public List<Moon> getMoonsFromPlanet(int planetId) {
+        // TODO: implement
+        List<Moon> moons = new ArrayList<>();
         try (Connection connection = ConnectionUtil.createConnection()) {
             String sql = "SELECT * FROM moons WHERE myPlanetId = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -160,5 +161,5 @@ public class MoonDao {
             System.err.println("Error retrieving moons from planet: " + e.getMessage());
         }
         return moons;
-	}
+    }
 }

@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
 import com.revature.models.Planet;
 import com.revature.repository.MoonDao;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -533,5 +535,110 @@ public class MoonServiceTest {
 
         // Assert
         Assertions.assertNull(foundMoon);
+    }
+
+    @Test
+    @DisplayName("Get All Moons::Valid")
+    @Order(32)
+    public void testGetAllMoonsValid() throws SQLException {
+        // Arrange
+        int ownerId = 1;
+        List<Moon> mockMoons = new ArrayList<>();
+
+        Moon moon1 = new Moon();
+        moon1.setName("Moon");
+        moon1.setMyPlanetId(1);
+
+        Moon moon2 = new Moon();
+        moon2.setName("Phobos");
+        moon2.setMyPlanetId(1);
+
+        mockMoons.add(moon1);
+        mockMoons.add(moon2);
+
+        Mockito.when(moonDao.getAllMoons(ownerId)).thenReturn(mockMoons);
+
+        // Act
+        List<Moon> moons = moonService.getAllMoons(ownerId);
+
+        // Assert
+        Assertions.assertNotNull(moons);
+        Assertions.assertEquals(2, moons.size());
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Moon".equals(moon.getName())));
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Phobos".equals(moon.getName())));
+    }
+
+    @Test
+    @DisplayName("Get All Moons::Invalid OwnerId")
+    @Order(33)
+    public void testGetAllMoonsSQLException() {
+        // Arrange
+        int ownerId = 100;
+
+        Mockito.when(moonDao.getAllMoons(ownerId)).thenThrow(new MoonFailException("Error retrieving moons"));
+
+        // Act & Assert
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            moonService.getAllMoons(ownerId);
+        });
+    }
+
+    @Test
+    @DisplayName("Get Moons From Planet::Valid")
+    @Order(34)
+    public void testGetMoonsFromPlanetValid() {
+        // Arrange
+        int planetId = 1;
+        List<Moon> mockMoons = new ArrayList<>();
+
+        Moon moon1 = new Moon();
+        moon1.setName("Moon");
+        moon1.setMyPlanetId(planetId);
+
+        Moon moon2 = new Moon();
+        moon2.setName("Deimos");
+        moon2.setMyPlanetId(planetId);
+
+        mockMoons.add(moon1);
+        mockMoons.add(moon2);
+
+        Mockito.when(moonDao.getMoonsFromPlanet(planetId)).thenReturn(mockMoons);
+
+        // Act
+        List<Moon> moons = moonService.getMoonsFromPlanet(planetId);
+
+        // Assert
+        Assertions.assertNotNull(moons);
+        Assertions.assertEquals(2, moons.size());
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Moon".equals(moon.getName())));
+        Assertions.assertTrue(moons.stream().anyMatch(moon -> "Deimos".equals(moon.getName())));
+    }
+
+    @Test
+    @DisplayName("Get Moons From Planet::Invalid - SQLException")
+    @Order(35)
+    public void testGetMoonsFromPlanetSQLException() {
+        // Arrange
+        int planetId = 100;
+
+        Mockito.when(moonDao.getMoonsFromPlanet(planetId)).thenThrow(new RuntimeException("Error retrieving moons from planet"));
+
+        // Act & Assert
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            moonService.getMoonsFromPlanet(planetId);
+        });
+    }
+
+    @Test
+    @DisplayName("Create Moon::Invalid - SQLException")
+    @Order(36)
+    public void testCreateMoonSQLException() {
+        // Arrange
+        Mockito.when(moonDao.createMoon(moon)).thenThrow(new RuntimeException("Error creating moon"));
+
+        // Act & Assert
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            moonService.createMoon(moon);
+        });
     }
 }

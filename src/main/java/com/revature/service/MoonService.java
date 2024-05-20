@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
+import com.revature.exceptions.MoonFailException;
 import com.revature.models.Moon;
 import com.revature.repository.MoonDao;
 
@@ -17,7 +18,11 @@ public class MoonService {
 
     public List<Moon> getAllMoons(int ownerId) {
         // TODO implement
-        return dao.getAllMoons(ownerId);
+        try {
+            return dao.getAllMoons(ownerId);
+        } catch (MoonFailException e) {
+            throw new RuntimeException("Service layer: " + e.getMessage(), e);
+        }
     }
 
     public Moon getMoonByName(int myPlanetId, String moonName) {

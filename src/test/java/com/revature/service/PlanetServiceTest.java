@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -465,5 +468,36 @@ public class PlanetServiceTest {
 
         // Assert
         Assertions.assertNull(foundPlanet);
+    }
+
+    @Test
+    @DisplayName("Get All Planets::Valid")
+    @Order(28)
+    public void testGetAllPlanetsValid() {
+        // Arrange
+        int ownerId = 1;
+        List<Planet> planets = new ArrayList<>();
+
+        Planet planet1 = new Planet();
+        planet1.setName("earth");
+        planet1.setOwnerId(ownerId);
+
+        Planet planet2 = new Planet();
+        planet2.setName("mars");
+        planet2.setOwnerId(ownerId);
+
+        planets.add(planet1);
+        planets.add(planet2);
+
+        Mockito.when(planetDao.getAllPlanets(ownerId)).thenReturn(planets);
+
+        // Act
+        List<Planet> foundPlanets = planetService.getAllPlanets(ownerId);
+
+        // Assert
+        Assertions.assertNotNull(foundPlanets);
+        Assertions.assertEquals(2, foundPlanets.size());
+        Assertions.assertTrue(foundPlanets.stream().anyMatch(planet -> "earth".equals(planet.getName())));
+        Assertions.assertTrue(foundPlanets.stream().anyMatch(planet -> "mars".equals(planet.getName())));
     }
 }
