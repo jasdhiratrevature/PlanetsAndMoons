@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class AuthenticationPage {
     private WebDriver driver;
 
@@ -58,5 +60,12 @@ public class AuthenticationPage {
     public void waitForHomePageLoad() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.visibilityOf(greetingBtn));
+    }
+
+    public void clickSuccessAlert() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("Account created successfully"), "Successful alert not displayed");
+        driver.switchTo().alert().accept();
     }
 }

@@ -38,7 +38,7 @@ public class AuthenticationStepDefinitions {
 
     @BeforeAll
     public static void beforeSetup() {
-        cleanUsersTable();
+        cleanDatabaseTable();
     }
 
     @Given("the user is on the Register page")
@@ -61,10 +61,7 @@ public class AuthenticationStepDefinitions {
 
     @Then("a successful alert should be displayed")
     public void successfulAlertDisplayed() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
-        assertTrue(alertText.contains("Account created successfully"), "Successful alert not displayed");
-        driver.switchTo().alert().accept();
+        authenticationPage.clickSuccessAlert();
     }
 
     @Then("an error message should be displayed")

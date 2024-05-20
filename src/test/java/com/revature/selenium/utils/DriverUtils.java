@@ -24,14 +24,14 @@ public class DriverUtils {
         }
     }
 
-    public static void cleanUsersTable() {
+    public static void cleanDatabaseTable() {
         Connection connection = null;
         try {
             connection = ConnectionUtil.createConnection();
             connection.setAutoCommit(false);
             deleteAllUsersFromTable(connection);
             connection.commit();
-            System.out.println("Users table cleaned successfully.");
+            System.out.println("Database table cleaned successfully.");
         } catch (SQLException e) {
             System.err.println("Error cleaning users table: " + e.getMessage());
             if (connection != null) {
@@ -53,9 +53,15 @@ public class DriverUtils {
     }
 
     private static void deleteAllUsersFromTable(Connection connection) throws SQLException {
-        String deleteQuery = "DELETE FROM users";
-        try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
-            statement.executeUpdate();
+        String deleteUserQuery = "DELETE FROM users";
+        String deletePlanetQuery = "DELETE FROM planets";
+        String deleteMoonQuery = "DELETE FROM moons";
+        try (PreparedStatement statement1 = connection.prepareStatement(deleteUserQuery);
+             PreparedStatement statement2 = connection.prepareStatement(deletePlanetQuery);
+             PreparedStatement statement3 = connection.prepareStatement(deleteMoonQuery)) {
+            statement1.executeUpdate();
+            statement2.executeUpdate();
+            statement3.executeUpdate();
         }
     }
 }
