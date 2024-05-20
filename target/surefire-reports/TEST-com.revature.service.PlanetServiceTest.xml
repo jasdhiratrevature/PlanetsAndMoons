@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.revature.repository.UserDaoTest" time="0.436" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.revature.service.PlanetServiceTest" time="0.074" tests="27" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -60,19 +60,58 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="registerUserValid(String, String)[1]" classname="com.revature.repository.UserDaoTest" time="0.375">
-    <system-out><![CDATA[Creating user with username: test
+  <testcase name="testCreatePlanetWithLeadingUppercase" classname="com.revature.service.PlanetServiceTest" time="0.034"/>
+  <testcase name="testCreatePlanetWithAllUppercase" classname="com.revature.service.PlanetServiceTest" time="0.002"/>
+  <testcase name="testCreatePlanetWithLeadingAndTrailingSpaces" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetWithNumbers" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetWithSpecialCharacters" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetAlreadyExists" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetWithEmptyName" classname="com.revature.service.PlanetServiceTest" time="0.002"/>
+  <testcase name="testCreatePlanetWithNameTooLong" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetWithNonAsciiName" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testCreatePlanetWithSQLInjectionName" classname="com.revature.service.PlanetServiceTest" time="0.0"/>
+  <testcase name="testCreatePlanetUnauthorized" classname="com.revature.service.PlanetServiceTest" time="0.0"/>
+  <testcase name="testRemovePlanetWithNoMoon" classname="com.revature.service.PlanetServiceTest" time="0.002"/>
+  <testcase name="testRemovePlanetWithMoon" classname="com.revature.service.PlanetServiceTest" time="0.002"/>
+  <testcase name="testRemovePlanetWithPlanetName" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testRemovePlanetWithEmptyId" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testRemovePlanetWithInvalidId" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testRemovePlanetUnauthorized" classname="com.revature.service.PlanetServiceTest" time="0.0"/>
+  <testcase name="testGetPlanetByName" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth
 ]]></system-out>
   </testcase>
-  <testcase name="registerUserValid(String, String)[2]" classname="com.revature.repository.UserDaoTest" time="0.003">
-    <system-out><![CDATA[Creating user with username: test123
+  <testcase name="testGetPlanetById" classname="com.revature.service.PlanetServiceTest" time="0.001"/>
+  <testcase name="testGetPlanetByNameWithUppercase" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth
 ]]></system-out>
   </testcase>
-  <testcase name="registerUserInvalid" classname="com.revature.repository.UserDaoTest" time="0.006">
-    <system-out><![CDATA[Creating user with username: testUser
-org.sqlite.SQLiteException: [SQLITE_CONSTRAINT_UNIQUE] A UNIQUE constraint failed (UNIQUE constraint failed: users.username)
+  <testcase name="testGetPlanetByNameWithSpecialCharacters" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth!@#
 ]]></system-out>
   </testcase>
-  <testcase name="getUserByUsernameValid" classname="com.revature.repository.UserDaoTest" time="0.003"/>
-  <testcase name="getUserByUsernameInvalid" classname="com.revature.repository.UserDaoTest" time="0.002"/>
+  <testcase name="testGetPlanetByNameWithNumbers" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth123
+]]></system-out>
+  </testcase>
+  <testcase name="testGetPlanetByNameWithLeadingAndTrailingSpaces" classname="com.revature.service.PlanetServiceTest" time="0.002">
+    <system-out><![CDATA[earth
+]]></system-out>
+  </testcase>
+  <testcase name="testGetPlanetByNonExistentName" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[nonexistentplanet
+]]></system-out>
+  </testcase>
+  <testcase name="testGetPlanetByEmptyName" classname="com.revature.service.PlanetServiceTest" time="0.0">
+    <system-out><![CDATA[
+]]></system-out>
+  </testcase>
+  <testcase name="testGetPlanetByNameWithSQLInjection" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth; drop table planets;
+]]></system-out>
+  </testcase>
+  <testcase name="testGetPlanetUnauthorized" classname="com.revature.service.PlanetServiceTest" time="0.001">
+    <system-out><![CDATA[earth
+]]></system-out>
+  </testcase>
 </testsuite>

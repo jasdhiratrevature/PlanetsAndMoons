@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.revature.repository.UserDaoTest" time="0.436" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.revature.repository.MoonDaoTest" time="0.021" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -60,19 +60,19 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="registerUserValid(String, String)[1]" classname="com.revature.repository.UserDaoTest" time="0.375">
-    <system-out><![CDATA[Creating user with username: test
+  <testcase name="createMoonValid" classname="com.revature.repository.MoonDaoTest" time="0.005"/>
+  <testcase name="createMoonInvalid" classname="com.revature.repository.MoonDaoTest" time="0.002">
+    <system-out><![CDATA[Error: Associated planet does not exist.
 ]]></system-out>
   </testcase>
-  <testcase name="registerUserValid(String, String)[2]" classname="com.revature.repository.UserDaoTest" time="0.003">
-    <system-out><![CDATA[Creating user with username: test123
+  <testcase name="getMoonByNameValid" classname="com.revature.repository.MoonDaoTest" time="0.002"/>
+  <testcase name="getMoonByNameInvalid" classname="com.revature.repository.MoonDaoTest" time="0.002">
+    <system-out><![CDATA[Moon not found with Name: Deimos
 ]]></system-out>
   </testcase>
-  <testcase name="registerUserInvalid" classname="com.revature.repository.UserDaoTest" time="0.006">
-    <system-out><![CDATA[Creating user with username: testUser
-org.sqlite.SQLiteException: [SQLITE_CONSTRAINT_UNIQUE] A UNIQUE constraint failed (UNIQUE constraint failed: users.username)
+  <testcase name="deleteMoonByIdValid" classname="com.revature.repository.MoonDaoTest" time="0.003"/>
+  <testcase name="deleteMoonByIdInvalid" classname="com.revature.repository.MoonDaoTest" time="0.003">
+    <system-out><![CDATA[Moon not found with ID: 999
 ]]></system-out>
   </testcase>
-  <testcase name="getUserByUsernameValid" classname="com.revature.repository.UserDaoTest" time="0.003"/>
-  <testcase name="getUserByUsernameInvalid" classname="com.revature.repository.UserDaoTest" time="0.002"/>
 </testsuite>
