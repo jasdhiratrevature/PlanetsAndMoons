@@ -44,8 +44,17 @@ public class HomePage {
     @FindBy(id = "planetNameInput")
     private WebElement planetNameInput;
 
+    @FindBy(id = "orbitedPlanetInput")
+    private WebElement orbitedPlanetInput;
+
+    @FindBy(id = "moonNameInput")
+    private WebElement moonNameInput;
+
     @FindBy(xpath = "//*[@id='inputContainer']//button[contains(text(), 'Submit Planet')]")
     private WebElement planetSubmitButton;
+
+    @FindBy(xpath = "//*[@id='inputContainer']//button[contains(text(), 'Submit Moon')]")
+    private WebElement moonSubmitButton;
 
 
     @FindBy(id = "locationSelect")
@@ -72,12 +81,24 @@ public class HomePage {
         planetNameInput.sendKeys(input);
     }
 
+    public void enterPlanetIDAddInput(String input) {
+        orbitedPlanetInput.sendKeys(input);
+    }
+
+    public void enterMoonNameAddInput(String input) {
+        moonNameInput.sendKeys(input);
+    }
+
     public void clickDeleteButton() {
         deleteButton.click();
     }
 
     public void clickSubmitPlanetButton() {
         planetSubmitButton.click();
+    }
+
+    public void clickSubmitMoonButton() {
+        moonSubmitButton.click();
     }
 
     public void enterSearchPlanetInput(String input) {
@@ -88,7 +109,8 @@ public class HomePage {
         searchPlanetButton.click();
     }
 
-    public boolean isPlanetInTable(String planetName) {
+    public boolean isPlanetInTable(String bodyName) {
+        System.out.println("Is Planet in Table: " + bodyName);
 
         List<WebElement> rows = celestialTable.findElements(By.tagName("tr"));
 
@@ -97,9 +119,10 @@ public class HomePage {
             if (!cells.isEmpty()) {
                 String type = cells.get(0).getText();
                 String name = cells.get(2).getText();
-                String owner = cells.get(3).getText();
 
-                if ("planet".equals(type) && planetName.equals(name)) {
+                if ("planet".equals(type) && bodyName.equals(name)) {
+                    return true;
+                } else if ("moon".equals(type) && bodyName.equals(name)) {
                     return true;
                 }
             }
@@ -107,7 +130,7 @@ public class HomePage {
         return false;
     }
 
-    public int getPlanetIdByName(String planetName) {
+    public int getPlanetIdByName(String bodyName) {
         List<WebElement> rows = celestialTable.findElements(By.tagName("tr"));
 
         for (WebElement row : rows) {
@@ -118,7 +141,7 @@ public class HomePage {
                 String name = cells.get(2).getText();
                 String owner = cells.get(3).getText();
 
-                if ("planet".equals(type) && planetName.equals(name)) {
+                if ("planet".equals(type) && bodyName.equals(name) || "moon".equals(type) && bodyName.equals(name)) {
                     try {
                         return Integer.parseInt(id);
                     } catch (NumberFormatException e) {

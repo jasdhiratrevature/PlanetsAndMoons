@@ -1,4 +1,4 @@
-Feature: Add Planet
+Feature:Planet Management
 
   Background:
     Given the user has an existing account
@@ -40,6 +40,7 @@ Feature: Add Planet
     When the user enters "earth" in the planet add input
     And clicks the submit planet button
     Then  the Error alert should be displayed
+
 
   Scenario Outline: Remove Planet - Valid
     Given the planet name <planetName> already exists
