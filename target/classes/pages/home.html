@@ -112,6 +112,32 @@
             margin-top: 0;
         }
 
+        .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+input[type="text"] {
+    padding-right: 30px; /* Make space for the clear button */
+    width: 100%;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 12px;
+    top: 17px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #aaa;
+    display: none; /* Initially hidden */
+}
+
+.clear-btn:hover {
+    color: #000;
+}
+
+
         @media (max-width: 768px) {
             #mainContent {
                 flex-direction: column;
@@ -155,13 +181,16 @@
         <div class="input-group">
             <label for="searchPlanetInput"></label>
             <input type="text" id="searchPlanetInput" placeholder="Enter Planet Name or ID">
+            <span class="clear-btn" id="clearSearchPlanetInput">x</span>
         </div>
         <div class="input-group">
             <button id="searchPlanetButton" onclick="searchPlanet()">Search Planet</button>
+
         </div>
         <div class="input-group">
             <label for="searchMoonInput"></label>
             <input type="text" id="searchMoonInput" placeholder="Enter Moon Name or ID">
+            <span class="clear-btn" id="clearSearchMoonInput">x</span>
         </div>
         <div class="input-group">
             <button id="searchMoonButton" onclick="searchMoon()">Search Moon</button>
@@ -409,7 +438,7 @@
             const data = await response.json();
             const table = document.getElementById('celestialTable');
             // Clear existing table content
-            table.innerHTML = '<tr><th>Type</th><th>ID></th><th>Name</th><th>Owner</th></tr>';
+            table.innerHTML = '<tr><th>Type</th><th>ID</th><th>Name</th><th>Owner</th></tr>';
             if (Array.isArray(data) && data.length > 0) {
                 // If data is an array and has elements, update the table
                 data.forEach(planet => {
@@ -458,8 +487,11 @@
         // Convert the input to lowercase
         input = input.toLowerCase();
 
-        let url;
-        if (!isNaN(input)) {
+         let url;
+    const highestMoonId = getHighestPlanetId();
+
+    // Determine if input should be treated as a name or an ID
+    if (!isNaN(input) && parseInt(input, 10) <= highestMoonId) {
             // If input is a number, search by id
             url = `http://localhost:7000/api/moon/id/${input}`;
         } else {
@@ -475,7 +507,7 @@
             const data = await response.json();
             const table = document.getElementById('celestialTable');
             // Clear existing table content
-            table.innerHTML = '<tr><th>Type</th><th>ID></th><th>Name</th><th>Owner</th></tr>';
+            table.innerHTML = '<tr><th>Type</th><th>ID</th><th>Name</th><th>Owner</th></tr>';
             if (Array.isArray(data) && data.length > 0) {
                 // If data is an array and has elements, update the table
                 data.forEach(moon => {
@@ -524,6 +556,50 @@
     });
     return highestId;
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const searchPlanetInput = document.getElementById('searchPlanetInput');
+    const clearSearchPlanetInput = document.getElementById('clearSearchPlanetInput');
+    const searchMoonInput = document.getElementById('searchMoonInput');
+    const clearSearchMoonInput = document.getElementById('clearSearchMoonInput');
+
+    // Show or hide clear button based on input value
+    function toggleClearButton(input, clearButton) {
+        if (input.value.length > 0) {
+            clearButton.style.display = 'block';
+        } else {
+            clearButton.style.display = 'none';
+        }
+    }
+
+    // Event listeners for searchPlanetInput
+    searchPlanetInput.addEventListener('input', function() {
+        toggleClearButton(searchPlanetInput, clearSearchPlanetInput);
+    });
+
+    clearSearchPlanetInput.addEventListener('mousedown', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        searchPlanetInput.value = '';
+        toggleClearButton(searchPlanetInput, clearSearchPlanetInput);
+        searchPlanetInput.focus();
+        populateCelestialTable(); // Call populateCelestialTable() after clearing the input
+    });
+
+    // Event listeners for searchMoonInput
+    searchMoonInput.addEventListener('input', function() {
+        toggleClearButton(searchMoonInput, clearSearchMoonInput);
+    });
+
+    clearSearchMoonInput.addEventListener('mousedown', function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        searchMoonInput.value = '';
+        toggleClearButton(searchMoonInput, clearSearchMoonInput);
+        searchMoonInput.focus();
+        populateCelestialTable(); // Call populateCelestialTable() after clearing the input
+    });
+});
+
 
 </script>
 </body>

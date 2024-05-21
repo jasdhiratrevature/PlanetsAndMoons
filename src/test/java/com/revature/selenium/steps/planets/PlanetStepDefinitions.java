@@ -3,8 +3,8 @@ package com.revature.selenium.steps.planets;
 import com.revature.models.Planet;
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
-import com.revature.pages.AuthenticationPage;
-import com.revature.pages.HomePage;
+import com.revature.selenium.pages.AuthenticationPage;
+import com.revature.selenium.pages.HomePage;
 import com.revature.repository.PlanetDao;
 import com.revature.repository.UserDao;
 import com.revature.service.PlanetService;
@@ -34,6 +34,11 @@ public class PlanetStepDefinitions {
     private PlanetService planetService;
     private User testUser;
 
+    @BeforeAll
+    public static void beforeSetup() {
+        cleanDatabaseTable();
+    }
+
     @Before
     public void setUp() {
         driver = getDriver();
@@ -45,12 +50,6 @@ public class PlanetStepDefinitions {
     public void tearDown() {
         quitDriver(driver);
     }
-
-    @BeforeAll
-    public static void beforeSetup() {
-        cleanDatabaseTable();
-    }
-
 
     @Given("the user has an existing account")
     public void theUserHasAnExistingAccount() {

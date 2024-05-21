@@ -1,8 +1,9 @@
-package com.revature.service;
+package com.revature.units.service;
 
 import com.revature.exceptions.PlanetFailException;
 import com.revature.models.Planet;
 import com.revature.repository.PlanetDao;
+import com.revature.service.PlanetService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

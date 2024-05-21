@@ -2,7 +2,7 @@ package com.revature.selenium.steps.authentication;
 
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
-import com.revature.pages.AuthenticationPage;
+import com.revature.selenium.pages.AuthenticationPage;
 import com.revature.repository.UserDao;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -25,6 +25,11 @@ public class AuthenticationStepDefinitions {
     private AuthenticationPage authenticationPage;
     private UserDao userDao;
 
+    @BeforeAll
+    public static void beforeSetup() {
+        cleanDatabaseTable();
+    }
+
     @Before
     public void setUp() {
         driver = getDriver();
@@ -34,11 +39,6 @@ public class AuthenticationStepDefinitions {
     @After
     public void tearDown() {
         quitDriver(driver);
-    }
-
-    @BeforeAll
-    public static void beforeSetup() {
-        cleanDatabaseTable();
     }
 
     @Given("the user is on the Register page")

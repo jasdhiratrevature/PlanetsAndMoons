@@ -1,8 +1,9 @@
-package com.revature.service;
+package com.revature.units.service;
 
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
 import com.revature.repository.UserDao;
+import com.revature.service.UserService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -194,7 +195,7 @@ public class UserServiceTest {
 
         // Act
         User actualUser = userService.register(mockUser);
-        
+
         // Assert that no user was created (null) due to SQL pattern
         assertNull(actualUser);
     }

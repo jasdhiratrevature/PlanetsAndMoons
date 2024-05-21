@@ -3,8 +3,8 @@ package com.revature.selenium.steps.moons;
 import com.revature.models.Moon;
 import com.revature.models.User;
 import com.revature.models.UsernamePasswordAuthentication;
-import com.revature.pages.AuthenticationPage;
-import com.revature.pages.HomePage;
+import com.revature.selenium.pages.AuthenticationPage;
+import com.revature.selenium.pages.HomePage;
 import com.revature.repository.MoonDao;
 import com.revature.repository.PlanetDao;
 import com.revature.repository.UserDao;
@@ -41,6 +41,11 @@ public class MoonStepDefinitions {
     private User testUser;
     private PlanetStepDefinitions planetStepDefinitions;
 
+    @BeforeAll
+    public static void beforeSetup() {
+        cleanDatabaseTable();
+    }
+
     @Before
     public void setUp() {
         driver = getDriver();
@@ -53,12 +58,6 @@ public class MoonStepDefinitions {
     public void tearDown() {
         quitDriver(driver);
     }
-
-    @BeforeAll
-    public static void beforeSetup() {
-        cleanDatabaseTable();
-    }
-
 
     @Given("the user has an active account")
     public void theUserHasAnExistingAccount() {

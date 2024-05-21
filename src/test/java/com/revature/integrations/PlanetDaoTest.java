@@ -1,6 +1,7 @@
-package com.revature.repository;
+package com.revature.integrations;
 
 import com.revature.models.Planet;
+import com.revature.repository.PlanetDao;
 import com.revature.utilities.ConnectionUtil;
 import org.junit.jupiter.api.*;
 
