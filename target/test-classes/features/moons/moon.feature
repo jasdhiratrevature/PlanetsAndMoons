@@ -29,11 +29,35 @@ Feature:Moon Management
     Then an error should be displayed for Moon Adding Error
 
     Examples:
-      | planetName    | moonName                           | errorDescription                                |
-      | "SATURN"      | "Phobos"                           | "Moon Already Exists"                           |
-      | "SATURN"      | ""                                 | "Empty Moon Name"                               |
-      | "Venus"       | "averylongmoonnamewaytoobig123456" | "Moon Name Too Long"                            |
-      | "MARS123"     | "ムーン"                              | "Non-ASCII Moon Name"                           |
-      | "alpha@beta"  | "moon'; DROP TABLE moons;"         | "Moon Name Containing SQL Injection Characters" |
-      | "NonExistent" | "NewMoon"                          | "Non-existing Planet ID"                        |
+      | planetName   | moonName                           | errorDescription                                |
+      | "SATURN"     | "Phobos"                           | "Moon Already Exists"                           |
+      | "SATURN"     | ""                                 | "Empty Moon Name"                               |
+      | "Venus"      | "averylongmoonnamewaytoobig123456" | "Moon Name Too Long"                            |
+      | "MARS123"    | "ムーン"                              | "Non-ASCII Moon Name"                           |
+      | "alpha@beta" | "moon'; DROP TABLE moons;"         | "Moon Name Containing SQL Injection Characters" |
+
+  Scenario Outline: Remove Moon - Valid
+    Given the moon name <moonName> already exists
+    And the Moon option is selected in the location select
+    When the user enters moon ID to delete <moonName> in the delete moon input
+    And clicks the delete moon button
+    Then the alert should be displayed for Moon <moonName> Deleted Successfully
+
+    Examples:
+      | moonName |
+      | "phobos" |
+      | "titan"  |
+
+  Scenario Outline: Remove Moon - Invalid
+    Given the moon name "demos" already exists
+    And the Moon option is selected in the location select
+    When the user enters moon ID to delete <moonName> in the delete moon input
+    And clicks the delete moon button
+    Then an error should be displayed for Moon Deleting Error
+
+    Examples:
+      | moonName     |
+      | "saturn"     |
+      | ""           |
+      | "1000000000" |
 

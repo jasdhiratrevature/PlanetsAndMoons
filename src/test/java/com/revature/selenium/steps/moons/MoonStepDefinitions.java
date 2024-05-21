@@ -163,4 +163,39 @@ public class MoonStepDefinitions {
         assertTrue(alertText.contains("error"), "Error alert not displayed");
         driver.switchTo().alert().accept();
     }
+
+    @Given("the moon name {string} already exists")
+    public void theMoonNameMoonNameAlreadyExists(String moonName) {
+        assertTrue(homePage.isPlanetInTable(moonName));
+    }
+
+    @When("the user enters moon ID to delete {string} in the delete moon input")
+    public void theUserEntersMoonIDToDeleteMoonNameInTheDeleteMoonInput(String moonName) {
+        int moonId = homePage.getPlanetIdByName(moonName);
+        homePage.enterDeleteInput(String.valueOf(moonId));
+    }
+
+    @And("clicks the delete moon button")
+    public void clicksTheDeleteMoonButton() {
+        homePage.clickDeleteButton();
+    }
+
+    @Then("the alert should be displayed for Moon {string} Deleted Successfully")
+    public void theAlertShouldBeDisplayedForMoonMoonNameDeletedSuccessfully(String moonName) throws InterruptedException {
+        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("Deleted moon with ID"), "Delete success alert not displayed");
+        driver.switchTo().alert().accept();
+        assertFalse(homePage.isPlanetInTable(moonName.trim().toLowerCase()));
+    }
+
+    @Then("an error should be displayed for Moon Deleting Error")
+    public void anErrorShouldBeDisplayedForMoonDeletingError() {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("Failed"), "Error alert not displayed");
+        driver.switchTo().alert().accept();
+    }
 }
