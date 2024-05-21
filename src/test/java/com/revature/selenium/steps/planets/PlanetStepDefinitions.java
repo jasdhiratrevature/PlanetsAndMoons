@@ -112,9 +112,9 @@ public class PlanetStepDefinitions {
         assertEquals(selectedOption, "Planet");
     }
 
-    @When("the user enters {string} in the planet input")
+    @When("the user enters {string} in the planet add input")
     public void theUserEntersInThePlanetInput(String planetName) {
-        homePage.enterPlanetNameInput(planetName);
+        homePage.enterPlanetNameAddInput(planetName);
     }
 
     @And("clicks the submit planet button")
@@ -142,7 +142,7 @@ public class PlanetStepDefinitions {
 
     @Given("the planet name {string} already exists")
     public void thePlanetNameAlreadyExists(String planetName) {
-        assertTrue(homePage.isPlanetInTable(planetName));
+        assertTrue(homePage.isPlanetInTable(planetName.trim().toLowerCase()));
     }
 
 
@@ -167,7 +167,7 @@ public class PlanetStepDefinitions {
         String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
         assertTrue(alertText.contains("Deleted planet with ID"), "Delete success alert not displayed");
         driver.switchTo().alert().accept();
-        assertFalse(homePage.isPlanetInTable(planetName));
+        assertFalse(homePage.isPlanetInTable(planetName.trim().toLowerCase()));
     }
 
     @Then("the Error alert should be displayed")
@@ -181,6 +181,27 @@ public class PlanetStepDefinitions {
 
     @When("the user enters {string} in the delete planet input")
     public void theUserEntersInTheDeletePlanetInput(String planetName) {
-        homePage.enterDeleteInput(planetName);
+        homePage.enterDeleteInput(planetName.trim().toLowerCase());
+    }
+
+    @And("clicks the search planet button")
+    public void clicksTheSearchPlanetButton() {
+        homePage.clickSearchPlanetButton();
+    }
+
+    @When("the user enters {string} in the search planet input")
+    public void theUserEntersPlanetNameInTheSearchPlanetInput(String planetName) {
+        homePage.enterSearchPlanetInput(planetName.trim().toLowerCase());
+    }
+
+    @Then("the celestial table displays the {string}")
+    public void theCelestialTableDisplaysThePlanetName(String planetName) {
+        assertTrue(homePage.isPlanetInTable(planetName.trim().toLowerCase()));
+    }
+
+    @And("the user enters planet ID instead of {string} in the search planet input")
+    public void theUserEntersPlanetIDInsteadOfInTheSearchPlanetInput(String planetName) {
+        int planetID = homePage.getPlanetIdByName(planetName);
+        homePage.enterSearchPlanetInput(String.valueOf(planetID));
     }
 }

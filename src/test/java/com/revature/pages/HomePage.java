@@ -68,7 +68,7 @@ public class HomePage {
         deleteInput.sendKeys(input);
     }
 
-    public void enterPlanetNameInput(String input) {
+    public void enterPlanetNameAddInput(String input) {
         planetNameInput.sendKeys(input);
     }
 
@@ -78,6 +78,14 @@ public class HomePage {
 
     public void clickSubmitPlanetButton() {
         planetSubmitButton.click();
+    }
+
+    public void enterSearchPlanetInput(String input) {
+        searchPlanetInput.sendKeys(input);
+    }
+
+    public void clickSearchPlanetButton() {
+        searchPlanetButton.click();
     }
 
     public boolean isPlanetInTable(String planetName) {

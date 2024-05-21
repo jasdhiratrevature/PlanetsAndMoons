@@ -8,7 +8,7 @@ Feature: Add Planet
   Scenario Outline: Add Planet - Valid
     Given the planet name <planetName> does not already exist
     And the Planet option is selected in the location select
-    When the user enters <planetName> in the planet input
+    When the user enters <planetName> in the planet add input
     And clicks the submit planet button
     Then the planet name <planetName> should be added successfully to the Celestial Table
 
@@ -23,7 +23,7 @@ Feature: Add Planet
 
   Scenario Outline: Add Planet - Invalid
     Given the Planet option is selected in the location select
-    When the user enters <planetName> in the planet input
+    When the user enters <planetName> in the planet add input
     And clicks the submit planet button
     Then the Error alert should be displayed
 
@@ -37,7 +37,7 @@ Feature: Add Planet
   Scenario: Add Planet - Planet Already Exists
     Given the planet name "earth" already exists
     And the Planet option is selected in the location select
-    When the user enters "earth" in the planet input
+    When the user enters "earth" in the planet add input
     And clicks the submit planet button
     Then  the Error alert should be displayed
 
@@ -66,3 +66,25 @@ Feature: Add Planet
       | ""           |
       | "1000000000" |
 
+  Scenario Outline: Search Planet - Valid
+    Given the planet name <planetName> already exists
+    When the user enters <planetName> in the search planet input
+    And clicks the search planet button
+    Then the celestial table displays the <planetName>
+
+    Examples:
+      | planetName   |
+      | "SATURN"     |
+      | "  Venus  "  |
+      | "MARS123"    |
+      | "alpha@beta" |
+
+  Scenario Outline: Search Planet - Invalid
+    When the user enters <planetName> in the search planet input
+    And clicks the search planet button
+    Then the Error alert should be displayed
+
+    Examples:
+      | planetName                     |
+      | "NonExistentPlanet"            |
+      | "planet'; DROP TABLE planets;" |
