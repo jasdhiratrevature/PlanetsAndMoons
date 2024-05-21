@@ -124,10 +124,7 @@ public class PlanetStepDefinitions {
 
     @Then("the planet name {string} should be added successfully to the Celestial Table")
     public void thePlanetShouldBeAddedSuccessfullyToTheCelestialTable(String planetName) throws InterruptedException {
-        // Set implicit wait of 3 seconds
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        Thread.sleep(1500);
-
+        Thread.sleep(500);
         planetDao = new PlanetDao();
         planetService = new PlanetService(planetDao);
         Planet planet = planetService.getPlanetByName(testUser.getId(), planetName);
@@ -136,22 +133,54 @@ public class PlanetStepDefinitions {
         assertNotNull(planet, "Planet should be found by the service");
 
         // Query the table to check for the matching row
-        boolean isPlanetInTable = homePage.isPlanetInTable(planet.getName(), planet.getOwnerId());
+        boolean isPlanetInTable = homePage.isPlanetInTable(planet.getName());
 
         // Assert that the planet is found in the table
         assertTrue(isPlanetInTable, "Planet should be found in the celestial table");
     }
 
-    @Then("the alert should be displayed for Planet Adding Error")
-    public void theAlertShouldBeDisplayedForPlanetAddingError() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
-        assertTrue(alertText.contains("error"), "Error alert not displayed");
-        driver.switchTo().alert().accept();
-    }
 
     @Given("the planet name {string} already exists")
     public void thePlanetNameAlreadyExists(String planetName) {
-        assertTrue(homePage.isPlanetInTable(planetName, testUser.getId()));
+        assertTrue(homePage.isPlanetInTable(planetName));
+    }
+
+
+    @When("the user enters planet ID to delete {string} in the delete planet input")
+    public void theUserEntersPlanetIDInTheDeletePlanetInput(String planetName) {
+        int planetID = homePage.getPlanetIdByName(planetName);
+        planetDao = new PlanetDao();
+        planetService = new PlanetService(planetDao);
+        homePage.enterDeleteInput(String.valueOf(planetID));
+    }
+
+    @And("clicks the delete button")
+    public void clicksTheDeleteButton() throws InterruptedException {
+        Thread.sleep(2000);
+        homePage.clickDeleteButton();
+    }
+
+    @Then("the alert should be displayed for Planet {string} Deleted Successfully")
+    public void theAlertShouldBeDisplayedForPlanetDeleteSuccess(String planetName) throws InterruptedException {
+        Thread.sleep(2000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("Deleted planet with ID"), "Delete success alert not displayed");
+        driver.switchTo().alert().accept();
+        assertFalse(homePage.isPlanetInTable(planetName));
+    }
+
+    @Then("the Error alert should be displayed")
+    public void theErrorAlertShouldBeDisplayed() {
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        String alertText = wait.until(ExpectedConditions.alertIsPresent()).getText();
+        assertTrue(alertText.contains("Failed"), "Error alert not displayed");
+        driver.switchTo().alert().accept();
+    }
+
+    @When("the user enters {string} in the delete planet input")
+    public void theUserEntersInTheDeletePlanetInput(String planetName) {
+        homePage.enterDeleteInput(planetName);
     }
 }

@@ -25,7 +25,7 @@ Feature: Add Planet
     Given the Planet option is selected in the location select
     When the user enters <planetName> in the planet input
     And clicks the submit planet button
-    Then the alert should be displayed for Planet Adding Error
+    Then the Error alert should be displayed
 
     Examples: Negative Cases
       | planetName                                      |
@@ -39,4 +39,30 @@ Feature: Add Planet
     And the Planet option is selected in the location select
     When the user enters "earth" in the planet input
     And clicks the submit planet button
-    Then  the alert should be displayed for Planet Adding Error
+    Then  the Error alert should be displayed
+
+  Scenario Outline: Remove Planet - Valid
+    Given the planet name <planetName> already exists
+    And the Planet option is selected in the location select
+    When the user enters planet ID to delete <planetName> in the delete planet input
+    And clicks the delete button
+    Then the alert should be displayed for Planet <planetName> Deleted Successfully
+
+    Examples:
+      | planetName |
+      | "earth"    |
+      | "jupiter"  |
+
+  Scenario Outline: Remove Planet - Invalid
+    Given the planet name "saturn" already exists
+    And the Planet option is selected in the location select
+    When the user enters <planetName> in the delete planet input
+    And clicks the delete button
+    Then the Error alert should be displayed
+
+    Examples:
+      | planetName   |
+      | "saturn"     |
+      | ""           |
+      | "1000000000" |
+

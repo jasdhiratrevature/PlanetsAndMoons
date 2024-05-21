@@ -80,7 +80,7 @@ public class HomePage {
         planetSubmitButton.click();
     }
 
-    public boolean isPlanetInTable(String planetName, int ownerId) {
+    public boolean isPlanetInTable(String planetName) {
 
         List<WebElement> rows = celestialTable.findElements(By.tagName("tr"));
 
@@ -91,12 +91,36 @@ public class HomePage {
                 String name = cells.get(2).getText();
                 String owner = cells.get(3).getText();
 
-                if ("planet".equals(type) && planetName.equals(name) && String.valueOf(ownerId).equals(owner)) {
+                if ("planet".equals(type) && planetName.equals(name)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public int getPlanetIdByName(String planetName) {
+        List<WebElement> rows = celestialTable.findElements(By.tagName("tr"));
+
+        for (WebElement row : rows) {
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            if (!cells.isEmpty()) {
+                String type = cells.get(0).getText();
+                String id = cells.get(1).getText();
+                String name = cells.get(2).getText();
+                String owner = cells.get(3).getText();
+
+                if ("planet".equals(type) && planetName.equals(name)) {
+                    try {
+                        return Integer.parseInt(id);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        return -1; // Return -1 if the ID is not a valid integer
+                    }
+                }
+            }
+        }
+        return -1; // Return -1 if the planet is not found
     }
 
 
