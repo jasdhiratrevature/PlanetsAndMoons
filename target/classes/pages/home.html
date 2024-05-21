@@ -389,15 +389,17 @@
         // Convert the input to lowercase
         input = input.toLowerCase();
 
-        let url;
-        if (!isNaN(input)) {
-            // If input is a number, search by id
-            url = `http://localhost:7000/api/planet/id/${input}`;
-        } else {
-            // If input is a string, search by name
-            console.log(input);
-            url = `http://localhost:7000/api/planet/name/${input}`;
-        }
+       let url;
+    const highestPlanetId = getHighestPlanetId();
+
+    // Determine if input should be treated as a name or an ID
+    if (!isNaN(input) && parseInt(input, 10) <= highestPlanetId) {
+        // If input is a number and less than or equal to the highest planet ID, search by id
+        url = `http://localhost:7000/api/planet/id/${input}`;
+    } else {
+        // Otherwise, search by name
+        url = `http://localhost:7000/api/planet/name/${input}`;
+    }
 
         const response = await fetch(url, {
             method: 'GET',
@@ -507,6 +509,22 @@
             alert('No moon found.');
         }
     })
+
+    function getHighestPlanetId() {
+    const rows = document.querySelectorAll('#celestialTable tr');
+    let highestId = -1;
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 0) {
+            const id = parseInt(cells[1].innerText, 10);
+            if (!isNaN(id) && id > highestId) {
+                highestId = id;
+            }
+        }
+    });
+    return highestId;
+}
+
 </script>
 </body>
 </html>
